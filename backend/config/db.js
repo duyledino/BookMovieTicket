@@ -1,37 +1,37 @@
 import pkg from 'pg';
-import env from 'dotenv'
+import dotenv from 'dotenv';
 
-env.config();
+dotenv.config();
 
-const {Pool} = pkg;
+const { Pool } = pkg;
 
-// export const pool = new Pool({
-//     user: process.env.USER,
-//     host: process.env.HOST,
-//     port: process.env.PG_PORT,
-//     database: process.env.DATABASE,
-//     password: process.env.PASSWORD
-// });
+// Use different names to avoid conflicts
+const USER = process.env.USER;
+const PG_PORT = process.env.PG_PORT;
+const PG_DATABASE = process.env.DATABASE;
+const PG_PASSWORD = process.env.PASSWORD;
 
-    const user= process.env.USER;
-    const host= process.env.HOST;
-    const port= process.env.PG_PORT;
-    const database= process.env.DATABASE;
-    const password= process.env.PASSWORD;
+console.log("🔍 PG_HOST:", PG_HOST);
+console.log("🔍 PG_USER:", USER);
+console.log("🔍 PG_DATABASE:", PG_DATABASE);
+
+// Ensure all required variables are defined
+if (!PG_USER || !PG_HOST || !PG_PORT || !PG_DATABASE || !PG_PASSWORD) {
+    throw new Error("❌ Missing required environment variables for database connection!");
+}
 
 export const pool = new Pool({
-    connectionString: `postgresql://${user}:${password}@${host}:${port}/${database}`,
+    connectionString: process.env.DATABASE_URL,
     ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
-  });
-  
+});
 
-const connectDB = ()=>{
+const connectDB = async () => {
     try {
-        pool.connect();
-        console.log("Connect to database successfully.");
+        await pool.connect();
+        console.log("✅ Connected to PostgreSQL successfully.");
     } catch (error) {
-        console.error(error);
+        console.error("❌ Database connection error:", error);
     }
-}
+};
 
 export default connectDB;

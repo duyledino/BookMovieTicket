@@ -13,8 +13,14 @@ const {Pool} = pkg;
 //     password: process.env.PASSWORD
 // });
 
+    const user= process.env.USER;
+    const host= process.env.HOST;
+    const port= process.env.PG_PORT;
+    const database= process.env.DATABASE;
+    const password= process.env.PASSWORD;
+
 export const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: `postgresql://${user}:${password}@${host}:${port}/${database}`,
     ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
   });
   

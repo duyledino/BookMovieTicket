@@ -19,6 +19,10 @@ app.use("/api/v1/movies",asyncHandle(movieRoutes));
 
 connectDB();
 
+app.use("/",(req,res)=>{
+    res.send("Hello world");
+})
+
 app.listen(PORT,()=>{
     console.log("Listening on http://localhost:5000");
 })

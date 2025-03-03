@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model booking {
+  book_id     String   @id
+  calendar_id String
+  customer_id String
+  book_time   DateTime @default(now()) @db.Timestamp(6)
+  seat_number String   @unique
+  calendar    calendar @relation(fields: [calendar_id], references: [calendar_id], onDelete: Cascade, onUpdate: NoAction)
+  customer    customer @relation(fields: [customer_id], references: [customer_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model calendar {
+  calendar_id    String    @id
+  available_seat Int
+  film_id        String
+  showtime       DateTime  @default(now()) @db.Timestamp(6)
+  booking        booking[]
+  film           film      @relation(fields: [film_id], references: [film_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model customer {
+  customer_id   String    @id // unique identifier
+  username      String    @unique // this ensures that username is unique
+  customer_name String?
+  customer_age  Int
+  password      String
+  booking       booking[]
+}
+
+model film {
+  film_id        String     @id
+  film_name      String
+  book_frequency Int        @default(0)
+  calendar       calendar[]
+}

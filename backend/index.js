@@ -1,29 +1,31 @@
 import express from 'express';
+import cors from 'cors';
 import env from 'dotenv';
-import movieRoutes from './routes/movieRoutes.js';
-import asyncHandle from './middleware/asyncHandle.js';
-import cors from 'cors'
-import connectDB from './config/db.js';
+import filmRouter from './router/filmRouter.js';
+import calendarRouter from './router/calenarRouter.js';
+import userRouter from './router/customerRouter.js';
+import bookRouter from './router/bookingRouter.js';
 
 env.config();
 
 const app = express();
-app.use(express.json())
+const PORT = process.env.PORT;
+
+//config
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 app.use(cors());
 
-const PORT = 5000;
+// router
+filmRouter(app);
+calendarRouter(app);
+userRouter(app);
+bookRouter(app);
 
-app.use("/api/v1/movies",asyncHandle(movieRoutes));
-//get top 250 movies
-//http://localhost:5000/api/v1/movies/top250
-
-connectDB();
-
-app.get("/", (req, res) => {
-    res.send("Hello World");
-});
-
+app.get("/",(req,res)=>{
+    res.send("hello world");
+})
 
 app.listen(PORT,()=>{
-    console.log("Listening on http://localhost:5000");
+    console.log(`Listening on http://localhost:${PORT}`);
 })

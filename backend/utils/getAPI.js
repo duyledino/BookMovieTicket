@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
+const urlAll = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
 const options = {
   method: 'GET',
   headers: {
@@ -10,10 +10,13 @@ const options = {
 };
 
 const getAll = async()=>{
-    const res = await axios.get(url,options);
+    const res = await axios.get(urlAll,options);
     return res;
 }
 
+const getDetail = async(id)=>{
+  const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}?language=en-US`,options);
+  return res;
+}
 
-
-export default getAll;
+export {getAll,getDetail};

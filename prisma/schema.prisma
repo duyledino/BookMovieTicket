@@ -39,6 +39,9 @@ model customer {
 model film {
   film_id        String     @id
   film_name      String
+  poster_path    String
+  overview       String
+  vote_average   Int
   book_frequency Int        @default(0)
   calendar       calendar[]
 }

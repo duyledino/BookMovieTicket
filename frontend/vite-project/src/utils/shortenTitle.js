@@ -1,6 +1,6 @@
-export const shorten = (title,maxlength = 10)=>{
+export const shorten = (title,maxlength = 9)=>{
     if(title.length > maxlength){
         return title.slice(0,maxlength) + "...";
     }
-    return title
+    return title;
 }

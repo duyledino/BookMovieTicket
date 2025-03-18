@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@layer base{
+    body{
+        @apply bg-black
+    }
+    p,h1,h2,h3{
+        @apply text-[#565E6C]
+    }
+}
+
+@layer components{
+    .active{
+        @apply bg-gradient-to-r from-blue-600 to-red-500 text-transparent bg-clip-text;
+    }
+}
+
+@theme{
+    --shadow-underline: 0 0.5px 5px #6e6a6a;
+    --shadow-boundary: 0px 0px 2px #6e6a6a;
+}

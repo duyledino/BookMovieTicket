@@ -32,6 +32,7 @@ model customer {
   customer_name String?
   customer_age  Int
   password      String
+  isAdmin       Boolean   @default(false)
   booking       booking[]
 }
 

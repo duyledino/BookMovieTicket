@@ -1,0 +1,19 @@
+import { NavLink, Outlet,useLocation } from 'react-router-dom'
+import active from '../utils/activeClass.js';
+
+function MovieList() {
+  const location = useLocation();
+  const isActive = location.pathname.includes("MovieOutter");
+  return (
+    <>
+    <div className="headerSelection flex justify-between text-[24px] text-[#565E6C] font-bold w-[20rem] ml-7 mb-10">
+      <NavLink to="/Movies" className={isActive?"text-[#565E6C]":"active"}>Inner Movies</NavLink>
+      <NavLink to="MovieOutter" className={isActive?active:""} >Outter Movies</NavLink>
+    </div>
+     <Outlet/>
+    </>
+  )
+}
+
+export default MovieList
+

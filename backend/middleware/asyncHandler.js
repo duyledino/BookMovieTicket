@@ -3,8 +3,7 @@ const asyncHandler = (fn)=>{
         try {
             await fn(req,res,next);
         } catch (error) {
-            res.status(500);
-            throw new Error(error);
+            console.error(error);
         }
     }
 }

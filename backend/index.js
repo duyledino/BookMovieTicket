@@ -5,6 +5,8 @@ import filmRouter from './router/filmRouter.js';
 import calendarRouter from './router/calenarRouter.js';
 import userRouter from './router/customerRouter.js';
 import bookRouter from './router/bookingRouter.js';
+import cookieParser from 'cookie-parser'
+import getFilmOutside from './router/getFilmOutsideRouter.js'
 
 env.config();
 
@@ -15,12 +17,14 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors());
+app.use(cookieParser());
 
 // router
 filmRouter(app);
 calendarRouter(app);
 userRouter(app);
 bookRouter(app);
+getFilmOutside(app);
 
 app.get("/",(req,res)=>{
     res.send("hello world");

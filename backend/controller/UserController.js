@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
+import { createToken } from "../middleware/authentication.js";
 
 const prisma = new PrismaClient();
 
@@ -55,6 +56,8 @@ const createAUser = async (req, res) => {
     },
   });
 
+  const token = createToken(created,res);
+
   res.status(201).json({
     Message: "User created successfully",
     created: {
@@ -107,4 +110,23 @@ const deleteAUser = async(req,res)=>{
     res.json({Message: "Delete successfully",deleted: deleted});
 }
 
-export { getAllUser, createAUser,updateAUser,deleteAUser};
+const loginUser = async(req,res)=>{
+  const {username,password} = req.body;
+  const existUser = await prisma.customer.findUnique({where:{username: username}});
+  if(!existUser) res.json({Message: "User Not Found"});
+  const check= await bcrypt.compare(password,existUser.password);
+  console.log(check);
+  if(!check) res.json({Message: "Username or Password is Wrong"});
+  const token = createToken(existUser,res);
+  res.json({Message: "Login successfully"});
+}
+
+const logoutUser = async(req,res)=>{
+  res.cookie('token',{ //res.cookie() only modifies headers, it does not send the response.
+    expires: new Date(0)
+  })
+  res.clearCookie('token');
+  res.json({Message: "Logout successfully"});
+}
+
+export { getAllUser, createAUser,updateAUser,deleteAUser,loginUser,logoutUser};

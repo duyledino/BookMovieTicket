@@ -1,10 +1,12 @@
 import React from 'react'
+import UserTable from '../components/UserTable'
 
 function User() {
   return (
-    <>
-     User List 
-    </>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">User List</h1>
+      <UserTable />
+    </div>
   )
 }
 

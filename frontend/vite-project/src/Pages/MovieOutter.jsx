@@ -1,23 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { shorten } from "../utils/shortenTitle.js";
+import { useDispatch, useSelector } from "react-redux";
+import { addPage } from "../slices/pageSlice.js";
+import { addMoviesInPage } from "../slices/movieSlice.js";
+import AddToStoreButton from "../components/AddToStoreButton.jsx"
 
 function MovieOutter() {
-  const [allFilm, setAllFilm] = useState([]);
+  const dispatch = useDispatch();
+  const page = useSelector((state) => state.pages.page);
+  const allFilm = useSelector((state) => state.movies.myMovies);
   useEffect(() => {
     const fetchFilm = async () => {
       try {
         const res = await fetch(
-          "http://localhost:8000/api/v1/FilmOutside/getFilmOutside"
+          `http://localhost:8000/api/v1/FilmOutside/getFilmOutside?page=${page}`
         );
         const data = await res.json();
-        setAllFilm(data.listFilm);
+        dispatch(addMoviesInPage(data.listFilm));
       } catch (error) {
         console.error("Failed to fetch film.");
       }
     };
+    const scrollHandle = () => {
+      if (
+        document.documentElement.scrollHeight <=
+        window.scrollY + window.innerHeight + 1
+      ) {
+        dispatch(addPage());
+      }
+    };
     fetchFilm();
-  }, []);
+    
+    window.addEventListener("scroll", scrollHandle);
+    return () => window.removeEventListener("scroll", scrollHandle);
+  }, [dispatch, page]);
   return (
     <>
       <div className="containerOutterFilm w-full max-w-[85%] m-auto">
@@ -29,7 +46,7 @@ function MovieOutter() {
                 key={film.id}
               >
                 <Link
-                  to={"/MovieOutter/" + film.id}
+                  to={`${film.id}`}
                   className="flex flex-col gap-2"
                 >
                   <div className="w-full flex justify-center">
@@ -42,7 +59,7 @@ function MovieOutter() {
                   <div className="flex flex-col gap-2">
                     <div className="info flex justify-between items-center">
                       <h2 className="title font-bold text-2xl ">
-                        {shorten(film.original_title)}
+                        {shorten(film.title)}
                       </h2>
                       <p className="text-white">
                         <span className="text-amber-300">
@@ -51,9 +68,7 @@ function MovieOutter() {
                         /10
                       </p>
                     </div>
-                    <button className="bg-amber-400 text-amber-50 p-2 hover:rounded-xl transition-all">
-                      Add To Store
-                    </button>
+                    <AddToStoreButton />
                   </div>
                 </Link>
               </li>

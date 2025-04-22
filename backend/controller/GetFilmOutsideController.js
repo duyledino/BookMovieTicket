@@ -1,7 +1,8 @@
 import { getAll, getDetail } from "../utils/getAPI.js";
 
 const GetAllFilmController = async (req, res) => {
-  const allFilmOutside = await getAll();
+  const {page} = req.query;
+  const allFilmOutside = await getAll(page);
 
   if (!allFilmOutside.data) return res.json({ Message: "No film found." });
   return res.json({

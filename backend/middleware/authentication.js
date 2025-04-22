@@ -32,10 +32,10 @@ const authenticateUser = (req, res, next) => {
   next();
 };
 
-const authticateAdmin = (req, res, next) => {
+const authenticateAdmin = (req, res, next) => {
   const isAdmin = req.cookies.token.isAdmin;
   if (!isAdmin) res.json({ Message: "Authenticate Failed." });
   next();
 };
 
-export { authenticateUser, createToken, authticateAdmin };
+export { authenticateUser, createToken, authenticateAdmin };

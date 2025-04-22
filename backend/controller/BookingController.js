@@ -5,21 +5,43 @@ const prisma = new PrismaClient();
 
 const getAllBooking = async (req, res) => {
   const allBooking = await prisma.booking.findMany();
-  if (allBooking.length === 0) return res.json({ Message: "No Booking Found" });
+  if (allBooking.length === 0) return res.json({ Message: "No Booking Found",allBooking:allBooking });
   res.json({ allBooking: allBooking });
 };
 
+
 const getAllBookOfSpecificCalendar = async (req, res) => {
   const { id } = req.params;
-  const existCalendar = await prisma.calendar.findUnique({ where: { id } });
+  const existCalendar = await prisma.calendar.findUnique({ where: { calendar_id:id } });
   if (!existCalendar) return res.json({ Message: "Calendar doesn't exist" });
   const allBookingOfExistCalendar = await prisma.booking.findMany({
     where: {
       calendar_id: id,
     },
+    select:{
+      calendar_id:true,
+      book_id:true,
+      book_time:true,
+      customer:{
+        select:{
+          customer_id:true,
+          username:true,
+        }
+      },
+      seat_Calendar:{
+        select:{
+          seat:{
+            select:{
+              seat_name:true,
+              theater_id:true,
+            }
+          }          
+        }
+      }
+    }
   });
   if (allBookingOfExistCalendar.length === 0)
-    return res.json({ Message: "No Booking Found" });
+    return res.json({ Message: "No Booking Found",allBookingOfExistCalendar:allBookingOfExistCalendar });
   res.json({ allBookingOfExistCalendar: allBookingOfExistCalendar });
 };
 
@@ -37,7 +59,6 @@ const createABooking = async (req, res) => {
       seat_number: seat_number,
     },
   });
-  console.log(existSeat);
   if (existSeat) return res.json({ Message: "Seat number exists" });
   // If customer_id is missing, create a new customer
   if (!customer_id || customer_id === "") {

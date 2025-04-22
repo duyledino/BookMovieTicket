@@ -1,10 +1,11 @@
 import React from 'react'
+import BookingTable from '../components/BookingTable'
 
 function Booking() {
   return (
-    <div>
-      Booking page
-    </div>
+    <>
+      <BookingTable/> 
+    </>
   )
 }
 

@@ -4,7 +4,7 @@
     body{
         @apply bg-black
     }
-    p,h1,h2,h3{
+    p,h1,h2,h3,span{
         @apply text-[#565E6C]
     }
 }

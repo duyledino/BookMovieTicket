@@ -8,7 +8,7 @@ function MovieList() {
     <>
     <div className="headerSelection flex justify-between text-[24px] text-[#565E6C] font-bold w-[20rem] ml-7 mb-10">
       <NavLink to="/Movies" className={isActive?"text-[#565E6C]":"active"}>Inner Movies</NavLink>
-      <NavLink to="MovieOutter" className={isActive?active:""} >Outter Movies</NavLink>
+      <NavLink to="MovieOutter" className={isActive?"active":"text-[#565E6C]"} >Outter Movies</NavLink>
     </div>
      <Outlet/>
     </>

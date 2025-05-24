@@ -14,15 +14,18 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios.defaults.withCredentials = true;
-    const res = await axios.post(`https://bookmovieticket.onrender.com/api/v1/user/login`, {
-      username: username,
-      password: password,
-    });
+    const res = await axios.post(
+      `https://bookmovieticket.onrender.com/api/v1/user/login`,
+      {
+        username: username,
+        password: password,
+      }
+    );
     console.log(res.data);
-    localStorage.setItem("user",JSON.stringify(res.data.user));
+    localStorage.setItem("user", JSON.stringify(res.data.user));
     if (res.status === 200) {
       dispatch(setUser(res.data.user));
-      localStorage.setItem("user",JSON.stringify(res.data.user));
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       dispatch(addToast({ message: res.data.Message, type: "success" }));
       if (res.data.user.isAdmin === true) {
         dispatch(
@@ -31,7 +34,9 @@ function LoginPage() {
             type: "success",
           })
         );
-        navigate("/admin");
+        setTimeout(() => {
+          navigate("/admin");
+        }, 2000);
         return;
       }
       navigate("/");

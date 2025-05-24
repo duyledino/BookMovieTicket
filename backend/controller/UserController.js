@@ -40,11 +40,11 @@ const getNumberOfUserByMonth = async (req, res) => {
 
 
 const createAUser = async (req, res) => {
-  let { username, password, customer_name, dob } = req.body;
+  let { username, password, customer_name, dob,phone } = req.body;
   // Validate required fields
-  console.log(username, password, customer_name, dob);
+  console.log(username, password, customer_name, dob,phone);
   if (!username || !password || !dob)
-    return res.status(400).json({
+    return res.status(202).json({
       Message: "username, password, or customer age is undefined",
     });
 
@@ -54,7 +54,7 @@ const createAUser = async (req, res) => {
   });
 
   if (existUser)
-    return res.status(400).json({ Message: "Username already exists" });
+    return res.status(202).json({ Message: "Username already exists" });
 
   // Default customer_name to username if empty
   if (!customer_name || customer_name === "") customer_name = username;
@@ -74,8 +74,9 @@ const createAUser = async (req, res) => {
       customer_id: uuid(),
       DateOfBirth: timeDOB,
       customer_name,
-      username,
+      username: username,
       password: hashPass,
+      phone: phone || "0123456789"
     },
   });
 

@@ -1,8 +1,60 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToast } from "../../slices/toastSlice.js";
+import { fixFormatDate } from "../../utils/getFormatDateNow.js";
 
 function RegisterPage() {
   const [appear, setAppear] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [cofirmPass, setCofirmPass] = useState("");
+  const [dob, setDob] = useState(null);
+  const [customerName, setCusomterName] = useState("");
+  const [phone, setPhone] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if (
+      username === "" ||
+      password === "" ||
+      cofirmPass === "" ||
+      dob === null
+    ) {
+      dispatch(addToast({ message: "Chua du thong tin", type: "failed" }));
+      return;
+    } else if (password !== cofirmPass) {
+      dispatch(addToast({ message: "Nhap lai mat khau", type: "failed" }));
+      return;
+    }else if(phone.length>10){
+      dispatch(addToast({ message: "So dien thoai khong hop le", type: "failed" }));
+      return;
+    }
+    console.log(username);
+    console.log(password);
+    console.log(customerName);
+    console.log(dob);
+    console.log(fixFormatDate(dob));
+    console.log(phone);
+    const res = await axios.post(
+      `https://bookmovieticket.onrender.com/api/v1/user/createUser`,
+      {
+        username: username,
+        password: password,
+        customer_name: customerName,
+        dob: fixFormatDate(dob),
+        phone: phone,
+      }
+    );
+    console.log(res);
+    if (res.status === 200) {
+      dispatch(addToast({ message: "Dang ki thanh cong", type: "success" }));
+      localStorage.setItem("user", JSON.stringify(res.data.created));
+      navigate("/");
+    }
+  };
   useEffect(() => {
     setTimeout(() => {
       setAppear(true);
@@ -53,7 +105,7 @@ function RegisterPage() {
             </p>
           </div>
           <div className="p-6 pt-0">
-            <form onSubmit={(e)=>e.preventDefault()}>
+            <form onSubmit={(e) => handleRegister(e)}>
               <div>
                 <div className="group relative rounded-lg border focus-within:border-sky-200 px-3 pb-1.5 pt-2.5 duration-200 focus-within:ring focus-within:ring-sky-300/30">
                   <div className="flex justify-between">
@@ -63,7 +115,7 @@ function RegisterPage() {
                   </div>
                   <input
                     type="text"
-                    name="username"
+                    onChange={(e) => setCusomterName(e.target.value)}
                     placeholder="Ho va Ten Cua Ban"
                     autoComplete="off"
                     className="block w-full border-0 bg-transparent p-0 text-xl file:my-1 file:rounded-full file:border-0 file:bg-accent file:px-4 file:py-2 file:font-medium placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground"
@@ -78,8 +130,8 @@ function RegisterPage() {
                     </label>
                   </div>
                   <input
+                    onChange={(e) => setDob(e.target.value)}
                     type="date"
-                    name="password"
                     className="block w-full border-0 bg-transparent p-0 text-xl placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 focus:ring-teal-500 sm:leading-7 text-foreground"
                   />
                 </div>
@@ -92,8 +144,8 @@ function RegisterPage() {
                     </label>
                   </div>
                   <input
+                    onChange={(e) => setPhone(e.target.value)}
                     type="text"
-                    name="password"
                     placeholder="VD: 0123456789"
                     className="block w-full border-0 bg-transparent p-0 text-xl placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 focus:ring-teal-500 sm:leading-7 text-foreground"
                   />
@@ -107,6 +159,7 @@ function RegisterPage() {
                     </label>
                   </div>
                   <input
+                    onChange={(e) => setUsername(e.target.value)}
                     type="text"
                     name="password"
                     placeholder="Username"
@@ -122,6 +175,7 @@ function RegisterPage() {
                     </label>
                   </div>
                   <input
+                    onChange={(e) => setPassword(e.target.value)}
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -137,6 +191,7 @@ function RegisterPage() {
                     </label>
                   </div>
                   <input
+                    onChange={(e) => setCofirmPass(e.target.value)}
                     type="password"
                     name="password"
                     placeholder="Confirm Password"
@@ -145,12 +200,12 @@ function RegisterPage() {
                 </div>
               </div>
               <div className="mt-4 flex items-center justify-between">
-                <a
+                <NavLink
                   className="text-xl font-medium text-foreground underline"
-                  href="/forgot-password"
+                  to={"/Login"}
                 >
                   Already have an account?
-                </a>
+                </NavLink>
               </div>
               <div className="mt-4 flex items-center justify-end gap-x-2">
                 <button

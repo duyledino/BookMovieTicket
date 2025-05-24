@@ -76,7 +76,7 @@ function RegisterPage() {
         <div className="text-foreground font-semibold text-xl tracking-tighter mx-auto flex items-center gap-2">
           <div>
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="1.5"

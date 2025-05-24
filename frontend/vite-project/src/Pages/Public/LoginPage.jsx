@@ -66,7 +66,7 @@ function LoginPage() {
           <div className="text-foreground font-semibold text-xl tracking-tighter mx-auto flex items-center gap-2">
             <div>
               <svg
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
@@ -104,7 +104,7 @@ function LoginPage() {
                       </label>
                       <div className="absolute right-3 translate-y-2 text-green-200">
                         <svg
-                          xmlns="http://www.w3.org/2000/svg"
+                          xmlns="www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                           fill="currentColor"
                           className="w-6 h-6"

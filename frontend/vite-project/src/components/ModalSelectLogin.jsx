@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { addToast } from "../slices/toastSlice";
 
 function ModalSelectLogin({ isOpen, onClose, user }) {
@@ -24,19 +24,25 @@ function ModalSelectLogin({ isOpen, onClose, user }) {
     <>
       <div className="absolute top-12 left-[-10px] p-0.5 bg-white max-w-2xs max-h-60 scaleAnimation">
         <div className="w-full flex flex-col gap-0.5">
-          <button
+          {
+            (user?.isAdmin ? <>
+              <NavLink className={`text-yellow-400 font-bold text-xl bg-black cursor-pointer`} to={`/admin`}>Admin</NavLink>
+            </> : <>
+            <button
             className={`text-yellow-400 font-bold text-xl bg-black cursor-pointer`}
             onClick={() => handleEnterProfile()}
           >
-            {user ? "Edit Profile" : "Login"}
+            {user && "Edit Profile"}
           </button>
+            </>)
+          }
           <button
             className={`${
               user ? "text-red-500" : "text-yellow-400"
             } font-bold text-xl bg-black cursor-pointer`}
             onClick={() => handleLogout()}
           >
-            {user ? "Logout" : "Register"}
+            {user && "Logout"}
           </button>
         </div>
       </div>

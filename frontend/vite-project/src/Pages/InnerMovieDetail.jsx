@@ -25,7 +25,7 @@ function InnerMovieDetail() {
           `http://localhost:8000/api/v1/genre/getGenresFromAFilm/${movieId}`
         );
         const dataGenre = await resGenre.json();
-        if(dataFilm && dataLanguage && dataGenre){
+        if (dataFilm && dataLanguage && dataGenre) {
           const data = {
             ...dataFilm.film,
             spoken_languages: dataLanguage.languages,
@@ -83,7 +83,7 @@ function InnerMovieDetail() {
                 {Math.floor(detail.vote_average)}/
                 <span className="text-blue-50">10</span>
               </h2>
-              <DeleteFromStoreButton/>
+              <DeleteFromStoreButton />
             </div>
             <div className="rightHero w-[55%]">
               <img
@@ -122,7 +122,10 @@ function InnerMovieDetail() {
                 <div>
                   <h3>Genres</h3>
                   {detail.genres.map((g) => (
-                    <p key={g.genres_id} className="text-gray-300 relative before:content[''] before:absolute before:bottom-0 before:left-0 before:w-0 before:h-0.5 before:bg-amber-300 before:transition-all hover:before:w-full hover:text-amber-300 cursor-pointer">
+                    <p
+                      key={g.genres_id}
+                      className="text-gray-300 relative before:content[''] before:absolute before:bottom-0 before:left-0 before:w-0 before:h-0.5 before:bg-amber-300 before:transition-all hover:before:w-full hover:text-amber-300 cursor-pointer"
+                    >
                       {g.name}
                     </p>
                   ))}
@@ -131,7 +134,10 @@ function InnerMovieDetail() {
                 <div>
                   <h3>Audio</h3>
                   {detail.spoken_languages.map((lang) => (
-                    <p key={lang.iso_639_1} className="text-gray-300 relative before:content[''] before:absolute before:bottom-0 before:left-0 before:w-0 before:h-0.5 before:bg-amber-300 before:transition-all hover:before:w-full hover:text-amber-300 cursor-pointer">
+                    <p
+                      key={lang.iso_639_1}
+                      className="text-gray-300 relative before:content[''] before:absolute before:bottom-0 before:left-0 before:w-0 before:h-0.5 before:bg-amber-300 before:transition-all hover:before:w-full hover:text-amber-300 cursor-pointer"
+                    >
                       {lang.english_name}
                     </p>
                   ))}
@@ -155,4 +161,4 @@ function InnerMovieDetail() {
   );
 }
 
-export default InnerMovieDetail; 
+export default InnerMovieDetail;

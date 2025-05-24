@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Router, Routes, useLocation } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboards from "./Pages/Dashboards";
 import User from "./Pages/User";
@@ -11,7 +11,7 @@ import BookingDetail from "./Pages/BookingDetail";
 import MovieInner from "./Pages/MovieInner";
 import MovieOutter from "./Pages/MovieOutter";
 import Calendar from "./Pages/Calendar";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { resetDetail } from "./slices/movieDetailSlice";
 import { useEffect } from "react";
 import InnerMovieDetail from "./Pages/InnerMovieDetail";
@@ -19,11 +19,37 @@ import { resetUser } from "./slices/userDetail";
 import CalendarDetail from "./Pages/CalendarDetail";
 import BookingList from "./Pages/BookingList";
 import BookingSpecificCalendar from "./Pages/BookingSpecificCalendar";
+import ToastContainer from "./components/ToastContainer";
+import LayoutPublic from "./components/public/LayoutPublic";
+import HomePage from "./Pages/Public/HomePage";
+import NotYetPage from "./Pages/Public/NotYetPage";
+import OnAirPage from "./Pages/Public/OnAirPage";
+import LoginPage from "./Pages/Public/LoginPage";
+import RegisterPage from "./Pages/Public/RegisterPage";
+import CalendarDetailPage from "./Pages/Public/CalendarDetailPage";
+import CalendarPage from "./Pages/Public/CalendarPage";
 
 function App() {
   const location = useLocation();
   const dispatch = useDispatch();
-
+  useEffect(()=>{
+    const body = document.querySelector("body");
+    if (location.pathname.includes("admin")) {
+      if (body.classList.contains("bgGradient")) {
+        body.classList.remove("bgGradient");
+        body.classList.add("bgBlack");
+      }else if(!body.classList.contains("bgBlack")){
+        body.classList.add("bgBlack");
+      }
+    } else if (!location.pathname.includes("admin")) {
+      if (body.classList.contains("bgBlack")) {
+        body.classList.remove("bgBlack");
+        body.classList.add("bgGradient");
+      }else if(!body.classList.contains("bgGradient")){
+        body.classList.add("bgGradient");
+      }
+    }
+  },[location.pathname])
   useEffect(() => {
     if (
       !location.pathname.includes("MovieOutter/") &&
@@ -31,13 +57,29 @@ function App() {
     ) {
       dispatch(resetDetail());
     }
-    if (!location.pathname.includes("UserList")) dispatch(resetUser());
   }, [location.pathname, dispatch]);
   return (
     <>
+      <ToastContainer />
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="/" element={<Dashboards />} />
+        {/* public Router */}
+        <Route path="/" element={<LayoutPublic />}>
+          <Route index element={<HomePage />} />
+          <Route path="PhimSapChieu" element={<NotYetPage/>}>
+            <Route path=":movieId"/>
+          </Route>
+          <Route path="PhimDangChieu" element={<OnAirPage/>}>
+            <Route path=":movieId"/>
+          </Route>
+          <Route path="PublicCalendar" element={<CalendarPage/>}>
+              <Route path=":movieId" element={<CalendarDetailPage/>}/>
+          </Route>
+          <Route path="Login" element={<LoginPage/>}/>            
+          <Route path="Register" element={<RegisterPage/>}/>            
+        </Route>
+        {/* admin router */}
+        <Route path="admin" element={<Layout />}>
+          <Route index element={<Dashboards />} />
           <Route path="UserList" element={<User />}>
             <Route path=":userId" element={<UserDetail />} />
           </Route>
@@ -48,14 +90,18 @@ function App() {
             <Route path="MovieOutter/:movieId" element={<MovieDetail />} />
           </Route>
           <Route path="Booking" element={<BookingList />}>
-            <Route index element={<Booking/>}/>
-            <Route path="BookingSpecificCalendar" element={<BookingSpecificCalendar/>}/>
-            <Route path=":bookingId" element={<BookingDetail/>} />
+            <Route index element={<Booking />} />
+            <Route
+              path="BookingSpecificCalendar"
+              element={<BookingSpecificCalendar />}
+            />
+            <Route path=":bookingId" element={<BookingDetail />} />
           </Route>
           <Route path="Calendar" element={<Calendar />}>
-            <Route path=":calendarId" element={<CalendarDetail/>}/>
+            <Route path=":calendarId" element={<CalendarDetail />} />
           </Route>
         </Route>
+        {/* 404 router */}
         <Route path="*" element={<Error404 />} />
       </Routes>
     </>

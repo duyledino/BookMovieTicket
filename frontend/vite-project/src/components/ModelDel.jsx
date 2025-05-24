@@ -1,32 +1,50 @@
-import axios from "axios";
 import React from "react";
-import {useSelector} from 'react-redux'
+import { useDispatch } from "react-redux";
+import { addToast } from "../slices/toastSlice.js";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const ModelDel = ({ isOpen, onClose,setIsChange }) => {
+const ModelDel = ({ isOpen, onClose, onDelete, entityID, setIsChange }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   if (!isOpen) return null;
-  const user = useSelector((state)=>state.userDetail.user)
-  const {customer_id} = user;
-  const handleDelete = async (customer_id)=>{
-    if(!customer_id) console.error("Khong tim thay ID nay");
-    const res = await axios.delete(`http://localhost:8000/api/v1/user/deleteUser/${customer_id}`);
-    if(res.status === 200) {
-        setIsChange();
+  const dispatch = useDispatch();
+  const handleDel = async () => {
+    if (!entityID) console.log("ID is missing.");
+    try {
+      const res = await onDelete(entityID);
+      if (res.status === 200) {
+        console.log(res);
+        dispatch(addToast({ message: res.data.Message, type: "success" }));
         onClose();
+        setIsChange();
+        if(location.pathname.includes("Movies")){
+          //important: this is reload the page :)
+          // window.location.href = "/Movies";
+          //important: replace the old state with the new state so react can re-render the old component 
+          //finally: the problem relate to redux state
+          navigate('/Movies');
+        }
+      }else{
+        dispatch(addToast({ message: res.Message, type: "failed" }));
+      }
+    } catch (error) {
+      console.error("Error: ", error);
     }
-    return; 
-  }
+  };
   return (
     <>
       <div className="fixed inset-0 bg-black/55  flex justify-center items-center z-50" onClick={()=>onClose()}>
-        <div className="bg-white max-h-[90vh] p-6 w-[500px] rounded overflow-y-auto">
+        <div className="bg-white max-h-[90vh] p-6 w-[500px] rounded overflow-y-auto" onClick={(e)=>e.stopPropagation()}>
           <div className="flex justify-center items-center flex-col gap-3">
             <h1 className="text-black font-bold text-2xl">
               {" "}
               Bạn đã chắc chắn xóa chứ{" "}
             </h1>
             <div className="flex gap-5">
-              <button onClick={()=>handleDelete(customer_id)} 
-              className="text-xl p-3 text-white bg-red-600 transition-all cursor-pointer rounded-[10px] hover:bg-red-400">
+              <button
+                onClick={() => handleDel()}
+                className="text-xl p-3 text-white bg-red-600 transition-all cursor-pointer rounded-[10px] hover:bg-red-400"
+              >
                 Delete
               </button>
               <button

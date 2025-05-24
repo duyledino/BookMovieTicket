@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addPage } from "../slices/pageSlice.js";
 import { addMoviesInPage } from "../slices/movieSlice.js";
 import AddToStoreButton from "../components/AddToStoreButton.jsx"
+import { addToast } from "../slices/toastSlice.js";
 
 function MovieOutter() {
   const dispatch = useDispatch();
@@ -14,8 +15,13 @@ function MovieOutter() {
     const fetchFilm = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8000/api/v1/FilmOutside/getFilmOutside?page=${page}`
+          `http://localhost:8000/api/v1/FilmOutside/getFilmOutside?page=${page}`,{credentials: "include"}
         );
+        if(res.status === 203){
+          dispatch(addToast({message: res.data.Message,type: "failed"}));
+          localStorage.removeItem("user");
+          navigate("/404NotFound");
+        }
         const data = await res.json();
         dispatch(addMoviesInPage(data.listFilm));
       } catch (error) {

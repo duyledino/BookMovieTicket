@@ -9,6 +9,8 @@ import cookieParser from 'cookie-parser'
 import getFilmOutside from './router/getFilmOutsideRouter.js'
 import genreRouter from './router/genreRouter.js'
 import languageRouter from './router/languageRouter.js'
+import theaterRouter from './router/theaterRouter.js'
+import popCornRouter from './router/popCornRouter.js'
 
 env.config();
 
@@ -18,7 +20,10 @@ const PORT = process.env.PORT;
 //config
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use(cors());
+app.use(cors({
+    origin:"http://localhost:8080",
+    credentials:true
+}));
 app.use(cookieParser());
 
 // router
@@ -29,7 +34,8 @@ bookRouter(app);
 getFilmOutside(app);
 genreRouter(app);
 languageRouter(app);
-
+theaterRouter(app);
+popCornRouter(app);
 
 app.get("/",(req,res)=>{
     res.send("hello world");

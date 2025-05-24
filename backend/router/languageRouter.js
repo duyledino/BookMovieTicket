@@ -17,8 +17,8 @@ const route = express.Router();
 const initLanguageRouter = (app) => {
   route.get("/getAllLanguages", asyncHandler(getAllLanguages));
   route.get("/getLanguagesFromAFilm/:film_id", asyncHandler(getLanguagesFromAFilm));
-  route.post("/createLanguage", asyncHandler(createALanguage));
-  route.post("/createALanguageFilm",asyncHandler(createALanguageFilm));
+  route.post("/createLanguage",authenticateUser,authenticateAdmin, asyncHandler(createALanguage));
+  route.post("/createALanguageFilm",authenticateUser,authenticateAdmin,asyncHandler(createALanguageFilm));
   route.delete(
     "/deleteLanguage/:id",
     asyncHandler(authenticateUser),

@@ -14,8 +14,8 @@ const route = express.Router();
 const initGenreRouter = (app) => {
   route.get("/getAllGenres", asyncHandler(getAllGenres));
   route.get("/getGenresFromAFilm/:film_id",asyncHandler(getGenresFromAFilm))
-  route.post("/createGenre", asyncHandler(createAGenre));
-  route.post("/createAGenreFilm",asyncHandler(createAGenreFilm));
+  route.post("/createGenre",authenticateUser,authenticateAdmin, asyncHandler(createAGenre));
+  route.post("/createAGenreFilm",authenticateUser,authenticateAdmin,asyncHandler(createAGenreFilm));
   route.delete("/deleteGenre/:id", asyncHandler(authenticateUser), asyncHandler(authenticateAdmin), asyncHandler(deleteAGenre));
 
   return app.use("/api/v1/genre", route);

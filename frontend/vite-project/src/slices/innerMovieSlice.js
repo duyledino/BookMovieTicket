@@ -9,12 +9,13 @@ const innerMovieSlice = createSlice({
     initialState,
     reducers:{
         addAll: (state,action)=>{
-            console.log(action.payload);
-            const newMovies = action.payload.filter(movie=>!state.innerMovie.some(inner=>inner.film_id === movie.film_id));
-            state.innerMovie = [...state.innerMovie,...newMovies];
+            state.innerMovie = action.payload;
+        },
+        resetAll:(state)=>{
+            state=initialState;
         }
     }
 })
 
-export const{addAll} = innerMovieSlice.actions;
+export const{addAll,resetAll} = innerMovieSlice.actions;
 export default innerMovieSlice.reducer;

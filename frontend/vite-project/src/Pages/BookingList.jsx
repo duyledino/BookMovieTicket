@@ -8,11 +8,11 @@ const BookingList = () => {
     <>
       <div className="flex justify-between text-[24px] font-bold w-[30rem] ml-7 mb-10">
         <NavLink
-          to="/Booking"
+          to="/admin/Booking"
           className={isActive ? "text-[#565E6C]" : "active"}
         >All Booking</NavLink>
         <NavLink
-          to="BookingSpecificCalendar"
+          to="/admin/Booking/BookingSpecificCalendar"
           className={isActive ? "active" : "text-[#565E6C]"}
         >Booking Specific Calendar</NavLink>
       </div>

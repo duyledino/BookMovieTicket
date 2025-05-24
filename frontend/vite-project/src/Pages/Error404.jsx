@@ -18,7 +18,6 @@ function Error404() {
         <button
           onClick={()=>navigate('/')}
           className={`p-4 text-2xl text-white font-bold bg-green-400 rounded-[10px] transition-all duration-500
-            delay-300
             opacity-0
             translate-y-8 ${show ? 'opacity-100 translate-y-[0]' : ''} cursor-pointer`}
         >

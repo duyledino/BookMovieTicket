@@ -1,34 +1,76 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaAngleRight } from "react-icons/fa6";
+import { fixFormatDateRespone } from "../utils/getFormatDateNow.js";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { addToast } from "../slices/toastSlice.js";
 
 const BookingSpecificCalendar = () => {
   const [calendars, setCalendars] = useState([]);
   const [bookings, setBookings] = useState([]);
-  const [isActiveCalendarId, setIsActiveCalendarId] = useState(null);
-  const handleClick = async (calendar_id) => {
-    setIsActiveCalendarId(
-      isActiveCalendarId === calendar_id ? null : calendar_id
+  const [isActiveCalendarId, setIsActiveCalendarId] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const checkExistsCalendarId = (calendar_id) => {
+    console.log(calendar_id, isActiveCalendarId.length);
+    const exists = isActiveCalendarId.some(
+      (calendarId) => calendarId === calendar_id
     );
-    if (isActiveCalendarId === calendar_id) {
+    console.log(exists);
+    return exists;
+  };
+  const handleClick = async (calendar_id) => {
+    const exists = checkExistsCalendarId(calendar_id);
+
+    setIsActiveCalendarId(
+      exists
+        ? isActiveCalendarId.filter((calendarId) => calendarId !== calendar_id)
+        : [...isActiveCalendarId, calendar_id]
+    );
+    if (exists) {
       return;
     }
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/booking/getAllBookOfSpecificCalendar/${calendar_id}`
+        `http://localhost:8000/api/v1/booking/getAllBookOfSpecificCalendar/${calendar_id}`,
+        { withCredentials: true }
       );
-      console.log(res.data);
-      setBookings(res.data.allBookingOfExistCalendar);
+      console.log(res);
+      if (res.status === 200) {
+        setBookings([...bookings, res.data.allBookingOfExistCalendar]);
+      } else if (res.status === 203) {
+        dispatch(addToast({ message: res.data.Message, type: "failed" }));
+        localStorage.removeItem("user");
+        navigate("/404NotFound");
+      } else {
+        dispatch(addToast({ message: res.data.Message, type: "failed" }));
+      }
     } catch (error) {
       console.error(error);
     }
   };
+  const getBooking = (calendar_id) => {
+    const book = bookings.find((book) =>
+      book.find((b) => b.calendar_id === calendar_id)
+    );
+    return book;
+  };
   useEffect(() => {
     const fetchCalendar = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/calendar/getAllCalendar`
+        `http://localhost:8000/api/v1/calendar/getAllCalendar`,
+        { withCredentials: true }
       );
-      setCalendars(res.data.allCalendar);
+      if (res.status === 200) {
+        setCalendars(res.data.allCalendar);
+      } else if (res.status === 203) {
+        dispatch(addToast({ message: res.data.Message, type: "failed" }));
+        localStorage.removeItem("user");
+        navigate("/404NotFound");
+      } else {
+        dispatch(addToast({ message: res.data.Message, type: "failed" }));
+      }
     };
     fetchCalendar();
   }, []);
@@ -63,7 +105,9 @@ const BookingSpecificCalendar = () => {
                   {
                     //TODO: Fix showtime format
                   }
-                  <td className="px-6 py-4 border-b">{calendar.showtime}</td>
+                  <td className="px-6 py-4 border-b">
+                    {fixFormatDateRespone(calendar.showtime)}
+                  </td>
                   <td
                     className={`px-6 py-4 border-b text-center ${
                       calendar.total_seat < calendar.available_seat
@@ -79,12 +123,16 @@ const BookingSpecificCalendar = () => {
                   <td>
                     <FaAngleRight
                       className={`transition-all ${
-                        isActiveCalendarId ? "rotate-90" : ""
+                        checkExistsCalendarId(calendar.calendar_id)
+                          ? "rotate-90"
+                          : ""
                       }`}
                     />
                   </td>
                 </tr>
-                {isActiveCalendarId && bookings.length > 0 ? (
+                {checkExistsCalendarId(calendar.calendar_id) &&
+                getBooking(calendar.calendar_id) &&
+                getBooking(calendar.calendar_id).length > 0 ? (
                   <tr className="transition-all delay-300 duration-300">
                     <td colSpan="7" className="px-6 py-4 bg-gray-900">
                       <table className="min-w-full bg-white border border-gray-300">
@@ -114,8 +162,8 @@ const BookingSpecificCalendar = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {bookings.length > 0 &&
-                            bookings.map((booking, i) => (
+                          {getBooking(calendar.calendar_id).map(
+                            (booking, i) => (
                               <tr
                                 // onClick={() => navigate(`/Calendar/${booking.book_id}`)}
                                 key={booking.book_id}
@@ -138,7 +186,7 @@ const BookingSpecificCalendar = () => {
                                   {booking.customer.customer_id}
                                 </td>
                                 <td className="px-6 py-4 border-b text-center">
-                                {booking.customer.username}
+                                  {booking.customer.username}
                                 </td>
                                 <td className="px-6 py-4 border-b text-center">
                                   {booking.seat_Calendar.seat.seat_name}
@@ -149,10 +197,11 @@ const BookingSpecificCalendar = () => {
                                   {booking.seat_Calendar.seat.theater_id}
                                 </td>
                                 <td className="px-6 py-4 border-b text-center">
-                                  {booking.book_time}
+                                  {fixFormatDateRespone(booking.book_time)}
                                 </td>
                               </tr>
-                            ))}
+                            )
+                          )}
                         </tbody>
                       </table>
                     </td>

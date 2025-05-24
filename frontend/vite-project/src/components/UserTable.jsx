@@ -1,36 +1,51 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../slices/usersSlice.js";
-import { setUser,resetUser } from "../slices/userDetail.js";
+import { setUser, resetUser } from "../slices/userDetail.js";
 
-import Modal from "./Modal.jsx";
+import ModalEditUser from "./ModalEditUser.jsx";
 import ModelDel from "./ModelDel.jsx";
+import axios from "axios";
+import ModalAddUser from "./ModalAddUser.jsx";
+import { getAgeUser } from "../utils/getFormatUser.js";
 
 function UserTable() {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
   const [isModalDelOpen, setIsModalDelOpen] = useState(false);
   const handleEditClick = (user) => {
     dispatch(setUser(user));
     setIsModalOpen(true);
   };
-  const handleDelClick=(user)=>{
-    dispatch(setUser(user))
-    setIsModalDelOpen(true)
-  }
+  const handleDelClick = (user) => {
+    dispatch(setUser(user));
+    setIsModalDelOpen(true);
+  };
   const users = useSelector((state) => state.users.users);
   //  TODO: use redux to store users
   // TODO: use modal to edit user
+  const onDelete = async (entityID) => {
+    const res = await axios.delete(
+      `http://localhost:8000/api/v1/user/deleteUser/${entityID}`
+    );
+    return res;
+  };
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/api/v1/user/getAllUser"
+          "http://localhost:8000/api/v1/user/getAllUser",
+          { credentials: "include" }
         );
-        if (response.ok) {
+        if (response.status === 200) {
           const data = await response.json();
           dispatch(setUsers(data.allUser));
+        } else if (response.status === 203) {
+          dispatch(addToast({ message: res.data.Message, type: "failed" }));
+          localStorage.removeItem("user");
+          navigate("/404NotFound");
         }
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -38,16 +53,36 @@ function UserTable() {
     };
     fetchUsers();
   }, [isChange]);
-
+  console.log(users);
   return (
     <>
-      <Modal
+      <ModalAddUser
+        isOpen={isModalAddOpen}
+        onClose={() => setIsModalAddOpen(false)}
+        setIsChange={setIsChange}
+      />
+      <ModalEditUser
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         setIsChange={() => setIsChange(!isChange)}
       />
-      <ModelDel isOpen = {isModalDelOpen} setIsChange={()=>setIsChange(!isChange)} onClose={()=>setIsModalDelOpen(false)} />
+      <ModelDel
+        isOpen={isModalDelOpen}
+        onDelete={onDelete}
+        entityID={useSelector((state) => state.userDetail.user).customer_id}
+        setIsChange={() => setIsChange(!isChange)}
+        onClose={() => setIsModalDelOpen(false)}
+      />
       <div className="overflow-x-auto">
+        <div className="min-w-full flex justify-between mb-6 gap-4">
+          <h1 className="text-2xl font-bold mb-4">User List</h1>
+          <button
+            className="p-3 bg-amber-500 rounded-[10px] cursor-pointer"
+            onClick={() => setIsModalAddOpen(true)}
+          >
+            Them User
+          </button>
+        </div>
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-800 text-amber-500">
@@ -71,7 +106,9 @@ function UserTable() {
                   <td className="px-6 py-4 border-b">
                     {user.customer_name || "N/A"}
                   </td>
-                  <td className="px-6 py-4 border-b">{user.customer_age}</td>
+                  <td className="px-6 py-4 border-b">
+                    {getAgeUser(user.DateOfBirth)}
+                  </td>
                   <td className="px-6 py-4 border-b">
                     {user.isAdmin ? "Yes" : "No"}
                   </td>
@@ -82,7 +119,10 @@ function UserTable() {
                     >
                       Edit
                     </button>
-                    <button className="cursor-pointer bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-800 active:bg-red-500" onClick={()=>handleDelClick(user)}>
+                    <button
+                      className="cursor-pointer bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-800 active:bg-red-500"
+                      onClick={() => handleDelClick(user)}
+                    >
                       Delete
                     </button>
                   </td>

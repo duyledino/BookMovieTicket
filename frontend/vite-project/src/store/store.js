@@ -6,16 +6,26 @@ import innerMovieReducer from '../slices/innerMovieSlice.js'
 import usersReducer from '../slices/usersSlice.js'
 import userDetailReducer from '../slices/userDetail.js'
 import calendarReducer from '../slices/calendarsSlice.js'
+import toastReducer from '../slices/toastSlice.js'
+import globalVariableReducer from '../slices/globalVariableSlice.js'
+import popCornReducer from '../slices/popcornSlice.js';
+import seatCalendarReducer  from '../slices/seatCalendarSlice.js'
+import theaterCalendarReducer from '../slices/theaterSlice.js'
 
 const store = configureStore({
     reducer:{
+        theater: theaterCalendarReducer,
+        seatCalendar: seatCalendarReducer,
         pages: pageReducer,
         movies: movieReducer,
         movieDetail: MovieDetailReducer,
         innerMovies: innerMovieReducer,
         users: usersReducer,
         userDetail: userDetailReducer,
-        calendars: calendarReducer
+        calendars: calendarReducer,
+        toasts: toastReducer,
+        globalVariable: globalVariableReducer,
+        popCorn: popCornReducer
     }
 })
 

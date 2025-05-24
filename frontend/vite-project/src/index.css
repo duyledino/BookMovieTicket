@@ -1,21 +1,94 @@
 @import "tailwindcss";
 
-@layer base{
-    body{
-        @apply bg-black
-    }
-    p,h1,h2,h3,span{
-        @apply text-[#565E6C]
-    }
+@layer base {
+  body {
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+  p,
+  h1,
+  h2,
+  h3,
+  span {
+    @apply text-[#565E6C];
+  }
 }
 
-@layer components{
-    .active{
-        @apply bg-gradient-to-r from-blue-600 to-red-500 text-transparent bg-clip-text;
-    }
+@layer components {
+  .active {
+    @apply bg-gradient-to-r from-blue-600 to-red-500 text-transparent bg-clip-text;
+  }
 }
 
-@theme{
-    --shadow-underline: 0 0.5px 5px #6e6a6a;
-    --shadow-boundary: 0px 0px 2px #6e6a6a;
+@layer utilities {
+  .bgBlack {
+    background-color: black;
+  }
+  .bgGradient {
+    background-image: linear-gradient(to bottom, #000000, #460d0d);
+    background-repeat: no-repeat;
+  }
+  .slideDownAnimation {
+    animation: slideDown 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 1 forwards;
+  }
+  .slideAnimation {
+    animation: slide 0.5s ease 1 forwards;
+  }
+  .appearAnimation {
+    animation: appear 0.5s ease 1 forwards;
+  }
+  .scaleAnimation {
+    animation: scale 0.5s ease 1 forwards;
+  }
+  @keyframes scale {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes appear {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes slideDown {
+    0% {
+      transform: translateY(0%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(20%);
+      opacity: 1;
+    }
+  }
+  @keyframes slide {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-10%);
+    }
+  }
+  .before-processAnimation::before {
+    animation: countDown 4s ease 1 forwards;
+  }
+
+  @keyframes countDown {
+    0% {
+      width: 100%;
+    }
+    100% {
+      width: 0%;
+    }
+  }
+}
+
+@theme {
+  --shadow-underline: 0 0.5px 5px #6e6a6a;
+  --shadow-boundary: 0px 0px 2px #6e6a6a;
 }

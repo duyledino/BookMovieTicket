@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
 import { createToken } from "../middleware/authentication.js";
+import { DateTime } from "luxon";
 
 const prisma = new PrismaClient();
 
@@ -10,20 +11,39 @@ const getAllUser = async (req, res) => {
     select: {
       customer_id: true,
       customer_name: true,
-      customer_age: true,
+      DateOfBirth: true,
       username: true,
       isAdmin: true,
+      createDate: true,
     },
   });
-  if (allUser.length === 0) return res.json({ Message: "No user found",allUser:allUser });
-  res.json({ allUser: allUser });
+  if (allUser.length === 0)
+    return res.status(400).json({ Message: "No user found", allUser: allUser });
+  res.status(200).json({ allUser: allUser });
 };
 
-const createAUser = async (req, res) => {
-  let { username, password, customer_name, customer_age } = req.body;
+const getNumberOfUserByMonth = async (req, res) => {
+  const getCount = await prisma.$queryRaw`SELECT
+	EXTRACT(
+		MONTH
+		FROM
+			CUSTOMER."createDate"
+	) AS MONTH, COUNT(CUSTOMER_ID) as count FROM CUSTOMER GROUP BY MONTH order by month asc;`;
+  const fixGetCount = getCount.map(row => ({
+    month: row.month,
+    count: Number(row.count)
+  }))
+  if(getCount.length === 0) return res.json({Message: "No user found",fixGetCount});
+  return res.json({fixGetCount});
+};
 
+
+
+const createAUser = async (req, res) => {
+  let { username, password, customer_name, dob } = req.body;
   // Validate required fields
-  if (!username || !password || !customer_age)
+  console.log(username, password, customer_name, dob);
+  if (!username || !password || !dob)
     return res.status(400).json({
       Message: "username, password, or customer age is undefined",
     });
@@ -34,16 +54,16 @@ const createAUser = async (req, res) => {
   });
 
   if (existUser)
-    return res.status(400).json({ Message: "User already exists" });
+    return res.status(400).json({ Message: "Username already exists" });
 
   // Default customer_name to username if empty
   if (!customer_name || customer_name === "") customer_name = username;
 
   // Ensure customer_age is a valid integer
-  const age = parseInt(customer_age);
-  if (isNaN(age))
-    return res.status(400).json({ Message: "Invalid age provided" });
-
+  // const age = parseInt(customer_age);
+  // if (isNaN(age))
+  //   return res.status(400).json({ Message: "Invalid age provided" });
+  const timeDOB = DateTime.fromFormat(dob,"yyyy-MM-dd HH:mm:ss",{zone:"UTC"})
   // Hash password
   const genSalt = await bcrypt.genSalt(5);
   const hashPass = await bcrypt.hash(password, genSalt);
@@ -52,7 +72,7 @@ const createAUser = async (req, res) => {
   const created = await prisma.customer.create({
     data: {
       customer_id: uuid(),
-      customer_age: age,
+      DateOfBirth: timeDOB,
       customer_name,
       username,
       password: hashPass,
@@ -61,12 +81,12 @@ const createAUser = async (req, res) => {
 
   const token = createToken(created, res);
 
-  res.status(201).json({
+  res.status(200).json({
     Message: "User created successfully",
     created: {
       customer_id: created.customer_id,
       customer_name: created.customer_name,
-      customer_age: created.customer_age,
+      DateOfBirth: created.DateOfBirth,
       username: created.username,
     },
   });
@@ -74,28 +94,27 @@ const createAUser = async (req, res) => {
 
 const updateAUser = async (req, res) => {
   const { id } = req.params;
-  const { username, password, customer_name, customer_age, isAdmin } = req.body;
-  console.log(username, password, customer_name, customer_age, isAdmin);
-  if (!username || !customer_name || !customer_age || isAdmin===undefined) {
-    return res
-      .status(400)
-      .json({
-        Message: "Missing in4",
-        in4: { username, password, customer_name, customer_age, isAdmin },
-      });
+  const { username, password, customer_name, dob, isAdmin } = req.body;
+  console.log(username, password, customer_name, dob, isAdmin);
+  if (!username || !customer_name || !dob || isAdmin === undefined) {
+    return res.status(400).json({
+      Message: "Missing in4",
+      in4: { username, password, customer_name, dob, isAdmin },
+    });
   }
   const existUser = await prisma.customer.findUnique({
     where: { customer_id: id },
   });
   if (!existUser) return res.json({ Message: "User not found" });
-  const age = parseInt(customer_age);
   let update;
+  const DateOfBirth = DateTime.fromFormat(dob,"yyyy-MM-dd HH:mm:ss",{zone:"UTC"});
+  console.log(DateOfBirth);
   if (!password) {
     update = await prisma.customer.update({
       data: {
         username: username,
         customer_name: customer_name,
-        customer_age: age,
+        DateOfBirth: DateOfBirth,
         isAdmin: isAdmin,
       },
       where: {
@@ -110,7 +129,7 @@ const updateAUser = async (req, res) => {
         username: username,
         password: hashPass,
         customer_name: customer_name,
-        customer_age: age,
+        DateOfBirth: DateOfBirth,
         isAdmin: isAdmin,
       },
       where: {
@@ -123,7 +142,7 @@ const updateAUser = async (req, res) => {
     updated: {
       username: update?.username,
       customer_name: update?.customer_name,
-      customer_age: update?.customer_age,
+      DateOfBirth: update?.DateOfBirth,
       admin: update?.isAdmin,
     },
   });
@@ -144,21 +163,38 @@ const loginUser = async (req, res) => {
   const existUser = await prisma.customer.findUnique({
     where: { username: username },
   });
-  if (!existUser) res.json({ Message: "User Not Found" });
+  if (!existUser) return res.status(202).json({ Message: "User Not Found" });
+
   const check = await bcrypt.compare(password, existUser.password);
-  console.log(check);
-  if (!check) res.json({ Message: "Username or Password is Wrong" });
-  const token = createToken(existUser, res);
-  res.json({ Message: "Login successfully" });
+  if (!check)
+    return res
+      .status(202)
+      .json({ Message: "Username or Password is Wrong" });
+
+  const token = createToken(existUser, res); // This sets the cookie
+  return res.status(200).json({
+    Message: "Login successfully",
+    user: {
+      username: existUser.username,
+      isAdmin: existUser.isAdmin,
+      customer_id: existUser.customer_id,
+    },
+  });
 };
 
+
 const logoutUser = async (req, res) => {
-  res.cookie("token", {
-    //res.cookie() only modifies headers, it does not send the response.
-    expires: new Date(0),
+  // res.cookie("token", {
+  //   //res.cookie() only modifies headers, it does not send the response.
+  //   expires: new Date(0),
+  // });
+  res.clearCookie("token", {
+    httpOnly: true, // Prevents client-side access
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    sameSite: "Lax", // Helps with CSRF protection
+    path: "/", // ← ensures all routes see the cookie
   });
-  res.clearCookie("token");
-  res.json({ Message: "Logout successfully" });
+  res.status(200).json({ Message: "Logout successfully" });
 };
 
 export {
@@ -168,4 +204,5 @@ export {
   deleteAUser,
   loginUser,
   logoutUser,
+  getNumberOfUserByMonth
 };

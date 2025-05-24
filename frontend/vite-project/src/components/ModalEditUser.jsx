@@ -1,15 +1,20 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-function Modal({ isOpen, onClose, setIsChange }) {
+import { useDispatch,useSelector } from "react-redux";
+import { addToast } from "../slices/toastSlice.js";
+import { getAgeUser } from "../utils/getFormatUser.js";
+import { DateTime } from "luxon";
+import { fixFormatDate } from "../utils/getFormatDateNow.js";
+function ModalEditUser({ isOpen, onClose, setIsChange }) {
   if (!isOpen) return null;
   const user = useSelector((state) => state.userDetail.user);
   if (!user) return;
-  const { customer_id, customer_name, customer_age, username, isAdmin } = user;
+  const { customer_id, customer_name, DateOfBirth, username, isAdmin } = user;
   const [name, setName] = useState(customer_name);
-  const [age, setAge] = useState(customer_age);
   const [usernameState, setUsernameState] = useState(username);
   const [admin, setAdmin] = useState(isAdmin);
+  const [dob,setDob] = useState(DateOfBirth);
+  const dispatch = useDispatch();
   const handleSubmit = async (
     e,
     customer_id,
@@ -20,17 +25,16 @@ function Modal({ isOpen, onClose, setIsChange }) {
   ) => {
     e.preventDefault();
     if (!name || !age || !usernameState) {
-      console.error("Chưa nhập đủ thông tin");
+      // console.error("");
+      dispatch(addToast({message:'Chưa nhập đủ thông tin',type:'error'}));
       return;
     }
-    if (Number.isNaN(age) || age < 18) {
-      console.error("Nhap sai dinh dang so");
-      return;
-    }
+    console.log(age);
     const res = await axios.patch(
       `http://localhost:8000/api/v1/user/updateUser/${customer_id}`,
       {
         username: usernameState,
+        dob: fixFormatDate(age),
         customer_name: name,
         customer_age: age,
         isAdmin: admin,
@@ -38,6 +42,7 @@ function Modal({ isOpen, onClose, setIsChange }) {
     );
     if (res.status === 200) {
       setIsChange();
+      dispatch(addToast({message:'Edit successfully',type:'success'}));
       onClose();
     }
   };
@@ -63,7 +68,7 @@ function Modal({ isOpen, onClose, setIsChange }) {
         <form
           className="flex w-full flex-col gap-1.5"
           onSubmit={(e) =>
-            handleSubmit(e, customer_id, name, age, usernameState, admin)
+            handleSubmit(e, customer_id, name, dob, usernameState, admin)
           }
         >
           <div className="flex items-center gap-3 w-full">
@@ -93,14 +98,14 @@ function Modal({ isOpen, onClose, setIsChange }) {
           </div>
           <div className="flex items-center gap-3 w-full">
             <label htmlFor="Age" className="text-xl w-[27%]">
-              Age{" "}
+              {"MM/dd/yyyy"}
             </label>
             <input
-              type="text"
-              value={age}
-              id="Age"
+              type="date"
+               value={new Date(dob).toISOString().split("T")[0]} 
+              id="dob"
               className=" w-full p-2 ring rounded-xs border-none outline-0 transition-all focus:ring-blue-600 focus:ring-3"
-              onChange={(e) => setAge(e.target.value)}
+              onChange={(e) => setDob(e.target.value)}
             />
           </div>
           <div className="flex items-center gap-3 w-full">
@@ -138,4 +143,4 @@ function Modal({ isOpen, onClose, setIsChange }) {
   );
 }
 
-export default Modal;
+export default ModalEditUser;

@@ -2,24 +2,23 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import tempImg from "../images/Film-photo-via-Canva-Pro.png";
+import { fixFormatDateRespone } from "../utils/getFormatDateNow";
 
 const CalendarDetail = () => {
   const { calendarId } = useParams();
   const [calendar, setCalendar] = useState(null);
   useEffect(() => {
     const getCalendarDetail = async () => {
-      console.log(calendarId);
       const res = await axios.get(
         `http://localhost:8000/api/v1/calendar/getSpecificCalendar?calendar_id=${calendarId}`
       );
-      console.log(res.data.specificCalendar);
       if (res.status === 200) setCalendar(res.data.specificCalendar);
     };
     getCalendarDetail();
   }, []);
   return (
     <>
-      {calendar!==null ? (
+      {calendar !== null ? (
         <>
           <div className="container m-auto overflow-y-auto">
             <div className="w-full p-6">
@@ -61,7 +60,7 @@ const CalendarDetail = () => {
                     <span className="text-yellow-500 font-bold text-3xl uppercase mr-1">
                       Show time:{" "}
                     </span>
-                    {calendar.showtime}
+                    {fixFormatDateRespone(calendar.showtime)}
                   </h1>
                 </div>
               </div>
@@ -71,9 +70,11 @@ const CalendarDetail = () => {
                 </div>
                 <div className="theater-map grid grid-cols-10 gap-3 w-[55%]">
                   {calendar.seat_Calendar.map((s) => (
-                    
-                    <div key={s.seat.seat_name}
-                      className={`w-14 h-14 cursor-pointer ring-1 ring-amber-400 flex justify-center items-center ${s.available_Seat?"bg-black":"bg-amber-400"} text-white font-bold`}
+                    <div
+                      key={s.seat.seat_name}
+                      className={`w-14 h-14 cursor-pointer ring-1 ring-amber-400 flex justify-center items-center ${
+                        s.available_Seat ? "bg-black" : "bg-amber-400"
+                      } text-white font-bold`}
                     >
                       {s.seat.seat_name}
                     </div>
@@ -84,7 +85,9 @@ const CalendarDetail = () => {
           </div>
         </>
       ) : (
-        <div className="text-center text-white text-4xl font-bold">Calendar not found</div>
+        <div className="text-center text-white text-4xl font-bold">
+          Calendar not found
+        </div>
       )}
     </>
   );

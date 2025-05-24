@@ -25,7 +25,7 @@ function MovieDetail() {
       setLoading(true);
       try {
         const res = await fetch(
-          `https://bookmovieticket.onrender.com/api/v1/FilmOutside/getFilmDetail/${movieId}`
+          `https://bookmovieticket.onrender.com/api/v1/FilmOutside/getFilmDetail/${movieId}`, {credentials: "include"}
         );
         if (!res.ok) {
           // Handle HTTP errors (e.g., 404 Not Found, 500 Server Error)

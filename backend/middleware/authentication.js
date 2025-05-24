@@ -25,7 +25,7 @@ const createToken = (user, res) => {
 };
 
 const authenticateUser = (req, res, next) => {
-  // console.log(req.cookies);
+  console.log(req.cookies);
   if (!req.cookies || !req.cookies.token)
     return res.status(203).json({ Message: "No Token" });
   const token = req.cookies.token;

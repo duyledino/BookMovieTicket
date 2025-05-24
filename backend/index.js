@@ -21,7 +21,7 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors({
-    origin:"https://book-movie-ticket-delta.vercel.app/",
+    origin:"https://book-movie-ticket-delta.vercel.app",
     credentials:true
 }));
 app.use(cookieParser());

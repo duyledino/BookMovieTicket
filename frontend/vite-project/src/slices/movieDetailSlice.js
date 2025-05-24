@@ -9,6 +9,7 @@ const movieDetailSlice = createSlice({
     initialState,
     reducers:{
         addDetail: (state,action)=>{
+            state.detail = {};
             state.detail = action.payload;
         },
         resetDetail: ()=>initialState

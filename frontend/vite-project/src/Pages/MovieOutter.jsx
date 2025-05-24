@@ -17,6 +17,7 @@ function MovieOutter() {
         const res = await fetch(
           `https://bookmovieticket.onrender.com/api/v1/FilmOutside/getFilmOutside?page=${page}`,{credentials: "include"}
         );
+        console.log(res);
         if(res.status === 203){
           dispatch(addToast({message: res.data.Message,type: "failed"}));
           localStorage.removeItem("user");

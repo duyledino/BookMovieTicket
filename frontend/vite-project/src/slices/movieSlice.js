@@ -10,6 +10,7 @@ const movieSlice = createSlice({
     reducers: {
 
         addMoviesInPage: (state,action)=>{
+            state.myMovies = [];
             const newMovies = action.payload.filter(movie=>!state.myMovies.some(m=>m.id === movie.id))
             state.myMovies = [...state.myMovies, ...newMovies];
         }

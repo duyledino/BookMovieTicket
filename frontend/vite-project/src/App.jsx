@@ -66,7 +66,7 @@ function App() {
         <Route path="/" element={<LayoutPublic />}>
           <Route index element={<HomePage />} />
           <Route path="PhimSapChieu" element={<NotYetPage/>}>
-            <Route path=":movieId"/>
+            <Route path=":movieId" element={<CalendarDetailComingSoonPage/>}/>
           </Route>
           <Route path="PhimDangChieu" element={<OnAirPage/>}>
             <Route path=":movieId"/>

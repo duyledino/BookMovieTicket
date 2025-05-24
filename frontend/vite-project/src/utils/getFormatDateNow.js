@@ -52,17 +52,21 @@ function fixFormatDate(date) {
   console.log(date);
   console.log(dateArr);
   let correctTime;
+  const correctDate = dateArr[0];
   if (dateArr.length === 1) {
-    correctTime = "00:00:00";
-  } else {
-    if(dateArr[1].includes("Z")){
-      correctTime = dateArr[1].slice(0,8);
+    if (dateArr.split(" ").length === 2) {
+      correctDate = dateArr.split(" ")[0];
+      correctTime = dateArr.split(" ")[1];
+    } else {
+      correctTime = "00:00:00";
     }
-    else correctTime = dateArr[1];
+  } else {
+    if (dateArr[1].includes("Z")) {
+      correctTime = dateArr[1].slice(0, 8);
+    } else correctTime = dateArr[1];
   }
   console.log(dateArr[1]);
   console.log(date + "-----------------" + dateArr[1]);
-  const correctDate = dateArr[0];
   console.log(correctTime);
   // console.log(date,dateArr,`${dateArr[0]} ${dateArr[1]}:00`);
   return `${correctDate} ${correctTime}`;

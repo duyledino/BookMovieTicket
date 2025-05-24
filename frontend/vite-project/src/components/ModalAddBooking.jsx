@@ -47,7 +47,7 @@ function ModalAddBooking({ isOpen, onClose, setIsChange }) {
   useEffect(() => {
     const fetchFilm = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/film/getAllNowFilm`
+        `http://https://bookmovieticket.onrender.com/api/v1/film/getAllNowFilm`
       );
       if (res.status === 200 && res.data.allNowFilm.length > 0) {
         setAllFilm((old) => [...old, ...res.data.allNowFilm]);
@@ -55,7 +55,7 @@ function ModalAddBooking({ isOpen, onClose, setIsChange }) {
     };
     const fetchUser = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/user/getAllUser`
+        `http://https://bookmovieticket.onrender.com/api/v1/user/getAllUser`,{withCredentials: true}
       );
       if (res.status === 200 && res.data.allUser.length > 0) {
         dispatch(setUsers(res.data.allUser));
@@ -63,7 +63,7 @@ function ModalAddBooking({ isOpen, onClose, setIsChange }) {
     };
     const fetchPopCorn = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/popCorn/getAllPopCorn`
+        `http://https://bookmovieticket.onrender.com/api/v1/popCorn/getAllPopCorn`
       );
       if (res.status === 200 && res.data.fixAllPopCorn.length > 0) {
         // console.log(res.data.fixAllPopCorn);
@@ -77,7 +77,7 @@ function ModalAddBooking({ isOpen, onClose, setIsChange }) {
   useEffect(() => {
     const fetchCalendar = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/calendar/getAllCalendarFromASpecificFilm?film_id=${filmID}`
+        `http://https://bookmovieticket.onrender.com/api/v1/calendar/getAllCalendarFromASpecificFilm?film_id=${filmID}`
       );
       console.log(res);
       if (res.status === 200 && res.data.fixSpecificCalendar.length > 0) {
@@ -125,7 +125,7 @@ function ModalAddBooking({ isOpen, onClose, setIsChange }) {
     }
     console.log(object);
     const res = axios.post(
-      `https://bookmovieticket.onrender.com/api/v1/booking/createBooking`,object
+      `http://https://bookmovieticket.onrender.com/api/v1/booking/createBooking`,object
       
     );
     return res;

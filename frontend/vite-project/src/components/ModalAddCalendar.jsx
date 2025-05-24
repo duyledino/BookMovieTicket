@@ -33,21 +33,21 @@ function ModalAddCalendar({ isOpen, onClose,setIsChange }) {
     }
     console.log(showTime);
     const res = await axios.post(
-      `https://bookmovieticket.onrender.com/api/v1/calendar/createACalendar`,
+      `http://https://bookmovieticket.onrender.com/api/v1/calendar/createACalendar`,
       {
         showtime:fixFormatDate(showTime) ,
         film_id: filmId,
         available_sit: seatNumber,
         total_sit: "0",
         theater_id: theaterId,
-      }
+      },{withCredentials: true}
     );
     return res;
   };
   useEffect(() => {
     const fetchFilm = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/film/getAllNowFilm`
+        `http://https://bookmovieticket.onrender.com/api/v1/film/getAllNowFilm`
       );
       if (res.status === 200) {
         dispatch(addAll(res.data.allNowFilm));
@@ -55,14 +55,16 @@ function ModalAddCalendar({ isOpen, onClose,setIsChange }) {
     };
     const fetchTheater = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/theater/getAllTheater`
+        `http://https://bookmovieticket.onrender.com/api/v1/theater/getAllTheater`,{withCredentials: true}
       );
+      console.log(res);
       if (res.status === 200)
         setTheaters((old) => [...old, ...res.data.allTheater]);
     };
     fetchFilm();
     fetchTheater();
   }, []);
+  console.log(theaters);
   return (
     <>
       <ModelVerify

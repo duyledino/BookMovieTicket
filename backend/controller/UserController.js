@@ -192,7 +192,7 @@ const logoutUser = async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true, // Prevents client-side access
     secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-    sameSite: "Lax", // Helps with CSRF protection
+    sameSite: "None", // Helps with CSRF protection
     path: "/", // ← ensures all routes see the cookie
   });
   res.status(200).json({ Message: "Logout successfully" });

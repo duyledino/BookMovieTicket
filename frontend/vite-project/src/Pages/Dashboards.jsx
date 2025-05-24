@@ -42,7 +42,7 @@ function Dashboards() {
   useEffect(() => {
     const fetchWeekDayRevenue = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/booking/GetTotalWeekDay`,{withCredentials: true}
+        `http://https://bookmovieticket.onrender.com/api/v1/booking/GetTotalWeekDay`,{withCredentials: true}
       );
       console.log(res);
       if (res.status === 200) {
@@ -65,8 +65,10 @@ function Dashboards() {
   useEffect(() => {
     const fetchRevenue = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/booking/getTotalRevenue`
+        `http://https://bookmovieticket.onrender.com/api/v1/booking/getTotalRevenue`,{withCredentials: true}
       );
+      console.log(res);
+
       if (res.status === 200) {
         const monthArr = res.data.fixGetTotal.map((f) => ({
           month: f.month,
@@ -85,7 +87,7 @@ function Dashboards() {
   useEffect(() => {
     const fetchBooking = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/booking/getCountBooking`
+        `http://https://bookmovieticket.onrender.com/api/v1/booking/getCountBooking`,{withCredentials: true}
       );
       if (res.status === 200) {
         console.log(res.data.fixGetCount);
@@ -100,7 +102,7 @@ function Dashboards() {
   useEffect(() => {
     const fetchUsers = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/user/getCountUser`
+        `http://https://bookmovieticket.onrender.com/api/v1/user/getCountUser`,{withCredentials: true}
       );
       if (res.status === 200) {
         const totalMonthUser = res.data.fixGetCount.map(m=>m.month);
@@ -114,7 +116,7 @@ function Dashboards() {
   useEffect(() => {
     const fetchTopMovie = async () => {
       const res = await axios.get(
-        `https://bookmovieticket.onrender.com/api/v1/film/topSellingMovie`
+        `http://https://bookmovieticket.onrender.com/api/v1/film/topSellingMovie`,{withCredentials: true}
       );
       if (res.status === 200 && res.data.fixTopMovie!==undefined) {
         setTopMovie((old) => [...old, ...res.data.fixTopMovie]);

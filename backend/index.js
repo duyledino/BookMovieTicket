@@ -21,7 +21,7 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors({
-    origin:"https://haoquangmoviebooking.netlify.app",
+    origin:"http://localhost:5174",
     credentials:true
 }));
 app.use(cookieParser());

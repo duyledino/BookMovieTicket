@@ -28,6 +28,7 @@ import LoginPage from "./Pages/Public/LoginPage";
 import RegisterPage from "./Pages/Public/RegisterPage";
 import CalendarDetailPage from "./Pages/Public/CalendarDetailPage";
 import CalendarPage from "./Pages/Public/CalendarPage";
+import CalendarDetailComingSoonPage from "./Pages/Public/CalendarDetailComingSoonPage";
 
 function App() {
   const location = useLocation();

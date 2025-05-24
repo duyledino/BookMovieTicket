@@ -33,7 +33,7 @@ function ModalAddCalendar({ isOpen, onClose,setIsChange }) {
     }
     console.log(showTime);
     const res = await axios.post(
-      `http://localhost:8000/api/v1/calendar/createACalendar`,
+      `https://bookmovieticket.onrender.com/api/v1/calendar/createACalendar`,
       {
         showtime:fixFormatDate(showTime) ,
         film_id: filmId,
@@ -47,7 +47,7 @@ function ModalAddCalendar({ isOpen, onClose,setIsChange }) {
   useEffect(() => {
     const fetchFilm = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/film/getAllNowFilm`
+        `https://bookmovieticket.onrender.com/api/v1/film/getAllNowFilm`
       );
       if (res.status === 200) {
         dispatch(addAll(res.data.allNowFilm));
@@ -55,7 +55,7 @@ function ModalAddCalendar({ isOpen, onClose,setIsChange }) {
     };
     const fetchTheater = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/theater/getAllTheater`
+        `https://bookmovieticket.onrender.com/api/v1/theater/getAllTheater`
       );
       if (res.status === 200)
         setTheaters((old) => [...old, ...res.data.allTheater]);

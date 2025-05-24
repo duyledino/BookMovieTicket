@@ -13,16 +13,16 @@ function InnerMovieDetail() {
   useEffect(() => {
     const fetchFilm = async () => {
       const resFilm = await fetch(
-        `http://localhost:8000/api/v1/film/getAFilm?film_id=${movieId}`
+        `https://bookmovieticket.onrender.com/api/v1/film/getAFilm?film_id=${movieId}`
       );
       const dataFilm = await resFilm.json();
       if (dataFilm) {
         const resLanguage = await fetch(
-          `http://localhost:8000/api/v1/language/getLanguagesFromAFilm/${movieId}`
+          `https://bookmovieticket.onrender.com/api/v1/language/getLanguagesFromAFilm/${movieId}`
         );
         const dataLanguage = await resLanguage.json();
         const resGenre = await fetch(
-          `http://localhost:8000/api/v1/genre/getGenresFromAFilm/${movieId}`
+          `https://bookmovieticket.onrender.com/api/v1/genre/getGenresFromAFilm/${movieId}`
         );
         const dataGenre = await resGenre.json();
         if (dataFilm && dataLanguage && dataGenre) {

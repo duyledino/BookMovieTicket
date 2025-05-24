@@ -33,7 +33,7 @@ const BookingSpecificCalendar = () => {
     }
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/booking/getAllBookOfSpecificCalendar/${calendar_id}`,
+        `https://bookmovieticket.onrender.com/api/v1/booking/getAllBookOfSpecificCalendar/${calendar_id}`,
         { withCredentials: true }
       );
       console.log(res);
@@ -59,7 +59,7 @@ const BookingSpecificCalendar = () => {
   useEffect(() => {
     const fetchCalendar = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/calendar/getAllCalendar`,
+        `https://bookmovieticket.onrender.com/api/v1/calendar/getAllCalendar`,
         { withCredentials: true }
       );
       if (res.status === 200) {

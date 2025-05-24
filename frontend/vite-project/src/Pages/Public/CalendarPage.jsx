@@ -25,7 +25,7 @@ function CalendarPage() {
   // coming soon
   useEffect(()=>{
     // const fetchCalendar= async ()=>{
-    //   const res = await axios.get("http://localhost:8000/api/v1/calendar/getAllCalendar");
+    //   const res = await axios.get("https://bookmovieticket.onrender.com/api/v1/calendar/getAllCalendar");
     //   console.log(res.data);
     //   if(res.status===200){
     //     setAllCalendar(res.data.allCalendar);

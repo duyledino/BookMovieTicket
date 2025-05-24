@@ -14,7 +14,7 @@ function MovieDetail() {
   useEffect(() => {
     const fetchFilm = async () => {
       const res = await fetch(
-        `http://localhost:8000/api/v1/FilmOutside/getFilmDetail/${movieId}`
+        `https://bookmovieticket.onrender.com/api/v1/FilmOutside/getFilmDetail/${movieId}`
       );
       const data = await res.json();
       if (data) dispatch(addDetail(data.film));

@@ -28,7 +28,7 @@ function UserTable() {
   // TODO: use modal to edit user
   const onDelete = async (entityID) => {
     const res = await axios.delete(
-      `http://localhost:8000/api/v1/user/deleteUser/${entityID}`
+      `https://bookmovieticket.onrender.com/api/v1/user/deleteUser/${entityID}`
     );
     return res;
   };
@@ -36,7 +36,7 @@ function UserTable() {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/api/v1/user/getAllUser",
+          "https://bookmovieticket.onrender.com/api/v1/user/getAllUser",
           { credentials: "include" }
         );
         if (response.status === 200) {

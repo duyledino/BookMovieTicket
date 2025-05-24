@@ -31,7 +31,7 @@ function ModalEditUser({ isOpen, onClose, setIsChange }) {
     }
     console.log(age);
     const res = await axios.patch(
-      `http://localhost:8000/api/v1/user/updateUser/${customer_id}`,
+      `https://bookmovieticket.onrender.com/api/v1/user/updateUser/${customer_id}`,
       {
         username: usernameState,
         dob: fixFormatDate(age),

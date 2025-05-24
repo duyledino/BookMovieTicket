@@ -20,7 +20,7 @@ const CalendarTable = () => {
   useEffect(() => {
     const getCalendars = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/calendar/getAllCalendar`,{withCredentials:true}
+        `https://bookmovieticket.onrender.com/api/v1/calendar/getAllCalendar`,{withCredentials:true}
       );
       if(res.status===203){
         dispatch(addToast({message: res.data.Message,type: "failed"}));
@@ -37,7 +37,7 @@ const CalendarTable = () => {
   //TODO: time repesent time_id: yyyy-mm-dd-hh-mm-00
   const onDelete = async (enetityID) => {
     const res = await axios.delete(
-      `http://localhost:8000/api/v1/calendar/deleteACalendar/${enetityID}`
+      `https://bookmovieticket.onrender.com/api/v1/calendar/deleteACalendar/${enetityID}`
     );
     return res;
   };

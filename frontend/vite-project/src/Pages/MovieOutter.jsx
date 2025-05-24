@@ -15,7 +15,7 @@ function MovieOutter() {
     const fetchFilm = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8000/api/v1/FilmOutside/getFilmOutside?page=${page}`,{credentials: "include"}
+          `https://bookmovieticket.onrender.com/api/v1/FilmOutside/getFilmOutside?page=${page}`,{credentials: "include"}
         );
         if(res.status === 203){
           dispatch(addToast({message: res.data.Message,type: "failed"}));

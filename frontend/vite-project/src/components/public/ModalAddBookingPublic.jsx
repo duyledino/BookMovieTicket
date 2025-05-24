@@ -21,7 +21,7 @@ function ModalAddBookingPublic({ setIsChange,film_id, OnClose, isOpen, booking }
     };
     console.log(object);
     const res = await axios.post(
-      `http://localhost:8000/api/v1/booking/createBooking`,
+      `https://bookmovieticket.onrender.com/api/v1/booking/createBooking`,
       object
     );
     if (res.status === 200) {

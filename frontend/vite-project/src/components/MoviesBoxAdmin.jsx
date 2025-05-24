@@ -30,7 +30,7 @@ function MoviesBoxAdmin({ setIsChange, film }) {
   const [activeCheck, setActiveCheck] = useState(active);
   const updateFilm = async () => {
     const res = await axios.patch(
-      `http://localhost:8000/api/v1/film/updateFilm/${film_id}`,
+      `https://bookmovieticket.onrender.com/api/v1/film/updateFilm/${film_id}`,
       {
         film_name: film_name,
         active: activeCheck,

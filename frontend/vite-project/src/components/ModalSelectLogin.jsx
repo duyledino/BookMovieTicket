@@ -9,7 +9,7 @@ function ModalSelectLogin({ isOpen, onClose, user }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = async () => {
-    const res = await axios.post(`http://localhost:8000/api/v1/user/logout`);
+    const res = await axios.post(`https://bookmovieticket.onrender.com/api/v1/user/logout`);
     if (res.status === 200) {
         console.log(res.data);
       dispatch(addToast({ message: res.data.Message, type: "success" }));

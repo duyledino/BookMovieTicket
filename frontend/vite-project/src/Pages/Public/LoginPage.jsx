@@ -14,7 +14,7 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios.defaults.withCredentials = true;
-    const res = await axios.post(`http://localhost:8000/api/v1/user/login`, {
+    const res = await axios.post(`https://bookmovieticket.onrender.com/api/v1/user/login`, {
       username: username,
       password: password,
     });

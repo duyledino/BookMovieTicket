@@ -112,10 +112,10 @@ function CalendarDetailPage() {
   useEffect(() => {
     const fetchCalendar = async () => {
       const resFilm = await axios.get(
-        `http://localhost:8000/api/v1/film/getAFilm?film_id=${film_id}`
+        `https://bookmovieticket.onrender.com/api/v1/film/getAFilm?film_id=${film_id}`
       );
       const resCalendar = await axios.get(
-        `http://localhost:8000/api/v1/calendar/getAllCalendarFromASpecificFilm?film_id=${film_id}`
+        `https://bookmovieticket.onrender.com/api/v1/calendar/getAllCalendarFromASpecificFilm?film_id=${film_id}`
       );
       if (resCalendar.status === 200 && resFilm.status === 200) {
         dispatch(setSeatCalendar(resCalendar.data.fixSpecificCalendar));
@@ -127,7 +127,7 @@ function CalendarDetailPage() {
     };
     const fetchPopCorn = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/popCorn/getAllPopCorn`
+        `https://bookmovieticket.onrender.com/api/v1/popCorn/getAllPopCorn`
       );
       if (res.status === 200 && res.data.fixAllPopCorn.length > 0) {
         dispatch(setPopCorn(res.data.fixAllPopCorn));
@@ -141,7 +141,7 @@ function CalendarDetailPage() {
     if (calendarId !== null) {
       const fetchCalendar = async () => {
         const resCalendar = await axios.get(
-          `http://localhost:8000/api/v1/calendar/getSpecificCalendar?calendar_id=${calendarId}`
+          `https://bookmovieticket.onrender.com/api/v1/calendar/getSpecificCalendar?calendar_id=${calendarId}`
         );
         if (resCalendar.status === 200) {
           setSpecificCalendar(resCalendar.data.specificCalendar);

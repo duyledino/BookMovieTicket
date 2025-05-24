@@ -9,7 +9,7 @@ const [comingSoons, setComingSoons] = useState([]);
   useEffect(() => {
     const fetchFilm = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/film/getAllComingSoonFilm`
+        `https://bookmovieticket.onrender.com/api/v1/film/getAllComingSoonFilm`
       );
       if (res.status === 200) {
         setComingSoons(res.data.allComingSoon);

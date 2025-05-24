@@ -9,7 +9,7 @@ function OnAirPage() {
     useEffect(() => {
       const fetchFilm = async () => {
         const res = await axios.get(
-          `http://localhost:8000/api/v1/film/getAllNowFilm`
+          `https://bookmovieticket.onrender.com/api/v1/film/getAllNowFilm`
         );
         console.log(res);
         if (res.status === 200) {

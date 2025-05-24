@@ -15,7 +15,7 @@ function MovieInner() {
   const allFilm = useSelector((state) => state.innerMovies.innerMovie);
   // const change = useSelector(state=>state.globalVariable.globalChange);
   const fetchFilm = async () => {
-    const res = await fetch("http://localhost:8000/api/v1/film/getAllFilm",{credentials: "include"});
+    const res = await fetch("https://bookmovieticket.onrender.com/api/v1/film/getAllFilm",{credentials: "include"});
     if (res.status === 200) {
       const data = await res.json();
       dispatch(addAll(data.allFilm));

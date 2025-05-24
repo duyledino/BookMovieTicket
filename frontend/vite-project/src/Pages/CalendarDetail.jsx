@@ -10,7 +10,7 @@ const CalendarDetail = () => {
   useEffect(() => {
     const getCalendarDetail = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/calendar/getSpecificCalendar?calendar_id=${calendarId}`
+        `https://bookmovieticket.onrender.com/api/v1/calendar/getSpecificCalendar?calendar_id=${calendarId}`
       );
       if (res.status === 200) setCalendar(res.data.specificCalendar);
     };

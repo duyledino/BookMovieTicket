@@ -63,7 +63,7 @@ function ModalAddUser({ isOpen, onClose, setIsChange }) {
       return;
     }
     const res = await axios.post(
-      `http://localhost:8000/api/v1/user/createUser`,
+      `https://bookmovieticket.onrender.com/api/v1/user/createUser`,
       {
         username: usernameState,
         customer_name: name,

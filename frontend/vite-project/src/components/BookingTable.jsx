@@ -20,7 +20,7 @@ const BookingTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/booking/getAllBooking`,{withCredentials: true}
+        `https://bookmovieticket.onrender.com/api/v1/booking/getAllBooking`,{withCredentials: true}
       );
       if (res.status === 200) setBookings(res.data.allBooking);
       else if(res.status === 203) {
@@ -41,7 +41,7 @@ const BookingTable = () => {
   };
   const onDelete = async (entityID) => {
     const res = await axios.delete(
-      `http://localhost:8000/api/v1/booking/deleteABooking/${entityID}`
+      `https://bookmovieticket.onrender.com/api/v1/booking/deleteABooking/${entityID}`
     );
     return res;
   };

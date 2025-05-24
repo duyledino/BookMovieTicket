@@ -42,7 +42,7 @@ function Dashboards() {
   useEffect(() => {
     const fetchWeekDayRevenue = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/booking/GetTotalWeekDay`,{withCredentials: true}
+        `https://bookmovieticket.onrender.com/api/v1/booking/GetTotalWeekDay`,{withCredentials: true}
       );
       console.log(res);
       if (res.status === 200) {
@@ -65,7 +65,7 @@ function Dashboards() {
   useEffect(() => {
     const fetchRevenue = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/booking/getTotalRevenue`
+        `https://bookmovieticket.onrender.com/api/v1/booking/getTotalRevenue`
       );
       if (res.status === 200) {
         const monthArr = res.data.fixGetTotal.map((f) => ({
@@ -85,7 +85,7 @@ function Dashboards() {
   useEffect(() => {
     const fetchBooking = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/booking/getCountBooking`
+        `https://bookmovieticket.onrender.com/api/v1/booking/getCountBooking`
       );
       if (res.status === 200) {
         console.log(res.data.fixGetCount);
@@ -100,7 +100,7 @@ function Dashboards() {
   useEffect(() => {
     const fetchUsers = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/user/getCountUser`
+        `https://bookmovieticket.onrender.com/api/v1/user/getCountUser`
       );
       if (res.status === 200) {
         const totalMonthUser = res.data.fixGetCount.map(m=>m.month);
@@ -114,7 +114,7 @@ function Dashboards() {
   useEffect(() => {
     const fetchTopMovie = async () => {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/film/topSellingMovie`
+        `https://bookmovieticket.onrender.com/api/v1/film/topSellingMovie`
       );
       if (res.status === 200 && res.data.fixTopMovie!==undefined) {
         setTopMovie((old) => [...old, ...res.data.fixTopMovie]);

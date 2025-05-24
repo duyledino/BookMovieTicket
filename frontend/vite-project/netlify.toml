@@ -4,5 +4,6 @@ to = "/index.html"
 status = 200
 
 [build]
-  command = "npm run build" # or your build command
-  publish = "build"         # or your publish directory (e.g., "dist")
+  command = "npm run build" 
+  publish = "frontend/vite-project/dist" # If netlify.toml is at repo root
+ 

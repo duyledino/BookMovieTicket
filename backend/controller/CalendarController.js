@@ -31,8 +31,8 @@ const getAllCalendar = async (req, res) => {
     ],
   });
   if (allCalendar.length === 0)
-    return res.json({ Message: "No calendar found", allCalendar: allCalendar });
-  res.json({ allCalendar: allCalendar });
+    return res.status(202).json({ Message: "No calendar found", allCalendar: allCalendar });
+  res.status(200).json({ allCalendar: allCalendar });
 };
 
 const getAllCalendarFromASpecificFilm = async (req, res) => {
@@ -146,12 +146,12 @@ const getSpecificCalendar = async (req, res) => {
 const createACalendar = async (req, res) => {
   const { showtime, film_id, available_sit, total_sit, theater_id } = req.body;
   console.log(showtime, film_id, available_sit, total_sit, theater_id);
-  if (!film_id) res.json({ Message: "Film_id is undefined." });
+  if (!film_id) res.status(202).json({ Message: "Film_id is undefined." });
   const existFilm = await prisma.film.findUnique({
     where: { film_id: film_id },
   });
   if (!existFilm)
-    return res.status(400).json({
+    return res.status(202).json({
       Message: "Film already exist so cannot create calendar",
     });
   const parseShowtime = DateTime.fromFormat(showtime, "yyyy-MM-dd HH:mm:ss", {
@@ -218,7 +218,7 @@ const updateACalendar = async (req, res) => {
     where: { film_id: film_id },
   });
   if (!existCalendar || !existFilm)
-    return res.json({ Message: "Calendar or film not found" });
+    return res.status(202).json({ Message: "Calendar or film not found" });
   const sit = parseInt(available_sit);
   const parseShowtime = new Date(showtime).toISOString();
   const updated = await prisma.calendar.update({
@@ -231,7 +231,7 @@ const updateACalendar = async (req, res) => {
       calendar_id: id,
     },
   });
-  res.json({ Message: "Update calendar successfully", calendar: updated });
+  res.status(200).json({ Message: "Update calendar successfully", calendar: updated });
 };
 
 const deleteACalendar = async (req, res) => {
@@ -249,7 +249,7 @@ const deleteACalendar = async (req, res) => {
   // 🛠️ Delete the record
   const deleted = await prisma.calendar.delete({ where: { calendar_id: id } });
 
-  res.json({ Message: "Delete calendar successfully", deleted: deleted });
+  res.status(200).json({ Message: "Delete calendar successfully", deleted: deleted });
 };
 
 export {

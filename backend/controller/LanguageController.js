@@ -9,7 +9,7 @@ const createALanguage = async (req, res) => {
   });
 
   if (existLanguage) {
-    return res.status(400).json({ Message: "Language already exists" });
+    return res.status(202).json({ Message: "Language already exists" });
   }
 
   const language = await prisma.language.create({
@@ -22,8 +22,8 @@ const createALanguage = async (req, res) => {
 const getAllLanguages = async (req, res) => {
   const languages = await prisma.language.findMany();
   if (languages.length === 0)
-    return res.json({ Message: "No languages found." });
-  res.json({ languages });
+    return res.status(202).json({ Message: "No languages found." });
+  res.status(200).json({ languages });
 };
 
 const deleteALanguage = async (req, res) => {
@@ -33,11 +33,11 @@ const deleteALanguage = async (req, res) => {
     where: { iso_639_1: id },
   });
 
-  if (!existLanguage) return res.json({ Message: "Language not found" });
+  if (!existLanguage) return res.status(202).json({ Message: "Language not found" });
 
   await prisma.language.delete({ where: { iso_639_1: id } });
 
-  res.json({ Message: "Deleted successfully" });
+  res.status(200).json({ Message: "Deleted successfully" });
 };
 
 const getLanguagesFromAFilm = async (req, res) => {
@@ -55,7 +55,7 @@ const getLanguagesFromAFilm = async (req, res) => {
       .status(200)
       .json({ Message: "Found Languages", languages: languages });
   }
-  return res.status(400).json({ Message: "Film not found." });
+  return res.status(202).json({ Message: "Film not found." });
 };
 
 const createALanguageFilm = async (req, res) => {

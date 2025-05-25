@@ -22,7 +22,7 @@ const createAFilm = async (req, res) => {
     },
   });
   if (existFilm) {
-    return res.status(400).json({ Message: "Film exists" });
+    return res.status(202).json({ Message: "Film exists" });
   }
   const film = await prisma.film.create({
     data: {
@@ -50,13 +50,13 @@ const getTopMoive = async (req, res) => {
   group by cf.film_id,cf.film_name
   order by total DESC limit 3`;
   if (topMovie.length === 0)
-    return res.json({ Message: "No Film found.", topMovie: topMovie });
+    return res.status(202).json({ Message: "No Film found.", topMovie: topMovie });
   const fixTopMovie = topMovie.map(row=>({
     film_id: row.film_id,
     film_name: row.film_name,
     total: Number(row.total)
   }))
-  return res.json({ fixTopMovie: fixTopMovie });
+  return res.status(200).json({ fixTopMovie: fixTopMovie });
 };
 
 const getLastestFilm = async(req,res)=>{
@@ -203,9 +203,9 @@ const deleteAFilm = async (req, res) => {
       },
     }))
   )
-    res.json({ Message: "Film Not Found" });
+    res.status(202).json({ Message: "Film Not Found" });
   const deleted = await prisma.film.delete({ where: { film_id: id } });
-  res.json({ Message: "Deleted successfully" });
+  res.status(200).json({ Message: "Deleted successfully" });
 };
 
 export {

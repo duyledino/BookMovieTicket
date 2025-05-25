@@ -33,8 +33,8 @@ const getNumberOfUserByMonth = async (req, res) => {
     month: row.month,
     count: Number(row.count)
   }))
-  if(getCount.length === 0) return res.json({Message: "No user found",fixGetCount});
-  return res.json({fixGetCount});
+  if(getCount.length === 0) return res.status(202).json({Message: "No user found",fixGetCount});
+  return res.status(200).json({fixGetCount});
 };
 
 
@@ -106,7 +106,7 @@ const updateAUser = async (req, res) => {
   const existUser = await prisma.customer.findUnique({
     where: { customer_id: id },
   });
-  if (!existUser) return res.json({ Message: "User not found" });
+  if (!existUser) return res.status(202).json({ Message: "User not found" });
   let update;
   const DateOfBirth = DateTime.fromFormat(dob,"yyyy-MM-dd HH:mm:ss",{zone:"UTC"});
   console.log(DateOfBirth);
@@ -138,7 +138,7 @@ const updateAUser = async (req, res) => {
       },
     });
   }
-  res.json({
+  res.status(200).json({
     Message: "Update successfully",
     updated: {
       username: update?.username,

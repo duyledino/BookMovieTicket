@@ -26,11 +26,11 @@ const getAllRevenueWeekDay = async (req, res) => {
     total: Number(row.total),
   }));
   if (getTotal.length === 0)
-    return res.json({
+    return res.status(202).json({
       Message: "No Revenue Found",
       fixGetTotalWeekDay: fixGetTotalWeekDay,
     });
-  return res.json({ fixGetTotalWeekDay: fixGetTotalWeekDay });
+  return res.status(200).json({ fixGetTotalWeekDay: fixGetTotalWeekDay });
 };
 
 const getAllRevenue = async (req, res) => {
@@ -50,8 +50,8 @@ const getAllRevenue = async (req, res) => {
     total: Number(row.total),
   }));
   if (getTotal.length === 0)
-    return res.json({ Message: "No Revenue Found", fixGetTotal: fixGetTotal });
-  return res.json({ fixGetTotal: fixGetTotal });
+    return res.status(202).json({ Message: "No Revenue Found", fixGetTotal: fixGetTotal });
+  return res.status(200).json({ fixGetTotal: fixGetTotal });
 };
 
 const getAllBooking = async (req, res) => {
@@ -83,8 +83,8 @@ const getNumberOfBookingByMonth = async (req, res) => {
     count: Number(row.count),
   }));
   if (getCount.length === 0)
-    return res.json({ Message: "No booking found", fixGetCount });
-  return res.json({ fixGetCount });
+    return res.status(202).json({ Message: "No booking found", fixGetCount });
+  return res.status(200).json({ fixGetCount });
 };
 
 const getAllBookOfSpecificCalendar = async (req, res) => {
@@ -92,7 +92,7 @@ const getAllBookOfSpecificCalendar = async (req, res) => {
   const existCalendar = await prisma.calendar.findUnique({
     where: { calendar_id: id },
   });
-  if (!existCalendar) return res.json({ Message: "Calendar doesn't exist" });
+  if (!existCalendar) return res.status(202).json({ Message: "Calendar doesn't exist" });
   const allBookingOfExistCalendar = await prisma.booking.findMany({
     where: {
       calendar_id: id,
@@ -142,9 +142,9 @@ const createABooking = async (req, res) => {
     .toUTC()
     .toJSDate();
   if (!calendar_id || !seat_id || !theater_id)
-    return res.status(400).json({ Message: "Missing in4" });
+    return res.status(202).json({ Message: "Missing in4" });
   const existCalendar = prisma.calendar.findUnique({ where: { calendar_id } });
-  if (!existCalendar) return res.json({ Message: "Calendar not found" });
+  if (!existCalendar) return res.status(202).json({ Message: "Calendar not found" });
   const book_id = uuid();
   const existSeat = await prisma.seat_Calendar.findUnique({
     select: {
@@ -164,7 +164,7 @@ const createABooking = async (req, res) => {
     },
   });
   if (!existSeat.available_Seat)
-    return res.status(400).json({ Message: "Seat number exists" });
+    return res.status(202).json({ Message: "Seat number exists" });
   // If customer_id is missing, create a new customer
   if (!customer_id || customer_id === "") {
     customer_id = uuid(); // Generate a new customer ID
@@ -184,7 +184,7 @@ const createABooking = async (req, res) => {
     const existCustomer = await prisma.customer.findUnique({
       where: { customer_id },
     });
-    if (!existCustomer) return res.json({ Message: "Customer not found" });
+    if (!existCustomer) return res.status(202).json({ Message: "Customer not found" });
   }
   const seat_price = existSeat.seat.price;
   const popCornPrice =
@@ -214,7 +214,7 @@ const createABooking = async (req, res) => {
       },
     },
   });
-  res.json({ Message: "Create Book Ticket successfully" });
+  res.status(200).json({ Message: "Create Book Ticket successfully" });
 };
 
 //future-todo: update booktime,customer_id aren't real :((. Change if neccessary;
@@ -223,16 +223,16 @@ const updateABooking = async (req, res) => {
   const existBooking = await prisma.booking.findUnique({
     where: { book_id: id },
   });
-  if (!existBooking) return res.json({ Message: "Booking ticket not found" });
+  if (!existBooking) return res.status(202).json({ Message: "Booking ticket not found" });
   const { customer_id, calendar_id, seat_number } = req.body;
   if (!customer_id || !calendar_id || !seat_number)
-    return res.json({ Message: "Missing in4" });
+    return res.status(202).json({ Message: "Missing in4" });
   const existCalendar = await prisma.calendar.findUnique({
     where: { calendar_id },
   });
   const existUser = await prisma.customer.findFirst({ where: { customer_id } });
   if (!existCalendar || !existUser)
-    return res.json({ Message: "Calendar or User not found" });
+    return res.status(202).json({ Message: "Calendar or User not found" });
   //key:( Not: {})
   const exist_seat_number = await prisma.booking.findFirst({
     where: {
@@ -241,7 +241,7 @@ const updateABooking = async (req, res) => {
       NOT: { book_id: id }, //ignore current updating book(id)
     },
   });
-  if (exist_seat_number) return res.json({ Message: "Exist seat number" });
+  if (exist_seat_number) return res.status(202).json({ Message: "Exist seat number" });
   const updated = await prisma.booking.update({
     data: {
       customer_id: customer_id,
@@ -252,7 +252,7 @@ const updateABooking = async (req, res) => {
       book_id: id,
     },
   });
-  res.json({ Message: "update successfully", updated: updated });
+  res.status(200).json({ Message: "update successfully", updated: updated });
 };
 
 const deleteABooking = async (req, res) => {
@@ -262,10 +262,10 @@ const deleteABooking = async (req, res) => {
     where: { book_id: id },
   });
   if (!existBooking)
-    return res.status(400).json({ Message: "Booking ticket not found" });
+    return res.status(202).json({ Message: "Booking ticket not found" });
   const deleted = await prisma.booking.delete({ where: { book_id: id } });
   if (!deleted)
-    return res.status(400).json({ Message: "Failed to delete booking" });
+    return res.status(202).json({ Message: "Failed to delete booking" });
   return res.status(200).json({ Message: "Delete successfully" });
 };
 

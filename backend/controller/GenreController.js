@@ -9,7 +9,7 @@ const createAGenre = async (req, res) => {
   });
 
   if (existGenre) {
-    return res.status(400).json({ Message: "Genre already exists" });
+    return res.status(202).json({ Message: "Genre already exists" });
   }
 
   const genre = await prisma.genre.create({
@@ -21,8 +21,8 @@ const createAGenre = async (req, res) => {
 
 const getAllGenres = async (req, res) => {
   const genres = await prisma.genre.findMany();
-  if (genres.length === 0) return res.json({ Message: "No genres found." });
-  res.json({ genres });
+  if (genres.length === 0) return res.status(202).json({ Message: "No genres found." });
+  res.status(200).json({ genres });
 };
 
 const getGenresFromAFilm = async (req, res) => {
@@ -38,7 +38,7 @@ const getGenresFromAFilm = async (req, res) => {
     });
     return res.status(200).json({ Message: "Found Genres", genres: genres });
   }
-  return res.status(400).json({ Message: "Film not found." });
+  return res.status(202).json({ Message: "Film not found." });
 };
 
 const createAGenreFilm = async (req, res) => {
@@ -72,11 +72,11 @@ const deleteAGenre = async (req, res) => {
     where: { genres_id: id },
   });
 
-  if (!existGenre) return res.json({ Message: "Genre not found" });
+  if (!existGenre) return res.status(202).json({ Message: "Genre not found" });
 
   await prisma.genre.delete({ where: { genres_id: id } });
 
-  res.json({ Message: "Deleted successfully" });
+  res.status(200).json({ Message: "Deleted successfully" });
 };
 
 export {

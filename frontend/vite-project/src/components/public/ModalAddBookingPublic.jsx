@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getFormatDateNow, getFormatTime } from "../../utils/getFormatDateNow";
 import { addToast } from "../../slices/toastSlice";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,11 @@ function ModalAddBookingPublic({ setIsChange,film_id, OnClose, isOpen, booking }
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onCreate = async () => {
+
+    if(!booking.seat){
+      dispatch(addToast({message: "Chua Chon ghe",type: "failed"}));
+      return;
+    }
 
     const object = {
       customer_id: user?.customer_id || undefined,

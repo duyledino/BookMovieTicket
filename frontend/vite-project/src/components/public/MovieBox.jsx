@@ -56,7 +56,7 @@ function MovieBox({ Type, film }) {
             {shorten(film_name)}
           </h2>
           <Link
-            to={active===true?`/PublicCalendar/${film_id}`:''}
+            to={active===true?`/PublicCalendar/${film_id}`:`/PhimSapChieu/${film_id}`}
             className="flex justify-between items-center gap-2 cursor-pointer"
           >
             <FaCirclePlay className="text-3xl text-white" />

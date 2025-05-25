@@ -14,8 +14,8 @@ const getAllTheater = async (req,res)=>{
             }
         }
     })
-    if(allTheater.length<0) return res.json({Message:"Theater not found.",allTheater:allTheater});
-    return res.json({allTheater:allTheater});
+    if(allTheater.length<0) return res.status(202).json({Message:"Theater not found.",allTheater:allTheater});
+    return res.status(200).json({allTheater:allTheater});
 }
 
 export {getAllTheater};

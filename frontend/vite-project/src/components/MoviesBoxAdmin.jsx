@@ -34,7 +34,7 @@ function MoviesBoxAdmin({ setIsChange, film }) {
       {
         film_name: film_name,
         active: activeCheck,
-      }
+      },{withCredentials: true}
     );
     if (res.status === 200) {
       dispatch(addToast({ message: res.data.Message, type: "success" }));

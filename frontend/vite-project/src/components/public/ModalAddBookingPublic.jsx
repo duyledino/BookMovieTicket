@@ -42,7 +42,7 @@ function ModalAddBookingPublic({
     console.log(object);
     const res = await axios.post(
       `https://bookmovieticket.onrender.com/api/v1/booking/createBooking`,
-      object
+      object,{withCredentials: true}
     );
     if (res.status === 200) {
       dispatch(addToast({ message: res.data.Message, type: "success" }));

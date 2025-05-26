@@ -136,15 +136,18 @@ const createABooking = async (req, res) => {
   let { calendar_id, customer_id, seat_id, theater_id, popCorn, time } =
     req.body;
   console.log(calendar_id, customer_id, seat_id, theater_id, popCorn, time);
+  if(customer_id === undefined || customer_id===null){
+    return res.status(202).json({Message: "Please login to continue"});
+  }
+  if (!calendar_id || !seat_id || !theater_id)
+    return res.status(202).json({ Message: "Missing in4" });
   const parseTime = DateTime.fromFormat(time, "yyyy-MM-dd HH:mm:ss", {
     zone: "UTC",
   })
     .toUTC()
     .toJSDate();
-  if (!calendar_id || !seat_id || !theater_id)
-    return res.status(202).json({ Message: "Missing in4" });
   const existCalendar = prisma.calendar.findUnique({ where: { calendar_id } });
-  if (!existCalendar) return res.status(202).json({ Message: "Calendar not found" });
+  if (!existCalendar) return res.json({ Message: "Calendar not found" });
   const book_id = uuid();
   const existSeat = await prisma.seat_Calendar.findUnique({
     select: {
@@ -166,26 +169,26 @@ const createABooking = async (req, res) => {
   if (!existSeat.available_Seat)
     return res.status(202).json({ Message: "Seat number exists" });
   // If customer_id is missing, create a new customer
-  if (!customer_id || customer_id === "") {
-    customer_id = uuid(); // Generate a new customer ID
-    // Create new customer
-    await prisma.customer.create({
-      data: {
-        customer_id: customer_id,
-        customer_name: "temporary customer",
-        username: `user_${uuid().slice(0, 8)}`,
-        password: "password123", // virtual customer
-        createDate: new Date().toISOString(),
-        DateOfBirth:  new Date().toISOString(),
-      },
-    });
-  } else {
-    // If customer_id exists, check if it exists in the database
-    const existCustomer = await prisma.customer.findUnique({
-      where: { customer_id },
-    });
-    if (!existCustomer) return res.status(202).json({ Message: "Customer not found" });
-  }
+  // if (!customer_id || customer_id === "") {
+  //   customer_id = uuid(); // Generate a new customer ID
+  //   // Create new customer
+  //   await prisma.customer.create({
+  //     data: {
+  //       customer_id: customer_id,
+  //       customer_name: "temporary customer",
+  //       username: `user_${uuid().slice(0, 8)}`,
+  //       password: "password123", // virtual customer
+  //       createDate: new Date().toISOString(),
+  //       DateOfBirth:  new Date().toISOString(),
+  //     },
+  //   });
+  // } else {
+  //   // If customer_id exists, check if it exists in the database
+  //   const existCustomer = await prisma.customer.findUnique({
+  //     where: { customer_id },
+  //   });
+  //   if (!existCustomer) return res.json({ Message: "Customer not found" });
+  // }
   const seat_price = existSeat.seat.price;
   const popCornPrice =
     popCorn.length > 0
@@ -214,7 +217,7 @@ const createABooking = async (req, res) => {
       },
     },
   });
-  res.status(200).json({ Message: "Create Book Ticket successfully" });
+  res.json({ Message: "Create Book Ticket successfully" });
 };
 
 //future-todo: update booktime,customer_id aren't real :((. Change if neccessary;

@@ -19,7 +19,7 @@ const initBookingRouter = (app) => {
   route.get("/getCountBooking",authenticateUser,authenticateAdmin,asyncHandler(getNumberOfBookingByMonth));
   route.get("/getAllBooking", authenticateUser,authenticateAdmin,asyncHandler(getAllBooking));
   route.get("/getAllBookOfSpecificCalendar/:id", asyncHandler(getAllBookOfSpecificCalendar));
-  route.post("/createBooking",asyncHandler(createABooking));
+  route.post("/createBooking",asyncHandler(authenticateUser),asyncHandler(createABooking));
   route.put("/updateBooking/:id",authenticateUser,authenticateAdmin, asyncHandler(updateABooking));
   route.delete("/deleteABooking/:id",authenticateUser,authenticateAdmin, asyncHandler(deleteABooking));
   return app.use("/api/v1/booking", route);

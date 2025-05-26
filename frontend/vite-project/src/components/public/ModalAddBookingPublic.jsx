@@ -4,15 +4,30 @@ import { addToast } from "../../slices/toastSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function ModalAddBookingPublic({ setIsChange,film_id, OnClose, isOpen, booking }) {
+function ModalAddBookingPublic({
+  setIsChange,
+  film_id,
+  OnClose,
+  isOpen,
+  booking,
+}) {
   if (!isOpen) return null;
   const user = JSON.parse(localStorage.getItem("user"));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onCreate = async () => {
-
-    if(!booking.seat){
-      dispatch(addToast({message: "Chua Chon ghe",type: "failed"}));
+    if (user !== undefined || user === null) {
+      dispatch(
+        addToast({
+          message: "Hay dang nhap de thuc hien thao tac nay",
+          type: "failed",
+        })
+      );
+      navigate("/Login");
+      return;
+    }
+    if (!booking.seat) {
+      dispatch(addToast({ message: "Chua Chon ghe", type: "failed" }));
       return;
     }
 

@@ -16,7 +16,7 @@ function ModalAddBookingPublic({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onCreate = async () => {
-    if (user !== undefined || user === null) {
+    if (user === undefined || user === null) {
       dispatch(
         addToast({
           message: "Hay dang nhap de thuc hien thao tac nay",

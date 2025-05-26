@@ -9,7 +9,7 @@ function DeleteFromStoreButton() {
   const dispatch = useDispatch();
   const [isOpen,setIsOpen] = useState(false);
   const onDelete = async (entityID)=>{
-    const res = await axios.delete(`https://bookmovieticket.onrender.com/api/v1/film/deleteFilm/${entityID}`);
+    const res = await axios.delete(`https://bookmovieticket.onrender.com/api/v1/film/deleteFilm/${entityID}`,{withCredentials: true});
     return res;
   }
   return (

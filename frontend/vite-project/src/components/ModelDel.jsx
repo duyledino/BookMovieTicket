@@ -22,7 +22,7 @@ const ModelDel = ({ isOpen, onClose, onDelete, entityID, setIsChange }) => {
           // window.location.href = "/Movies";
           //important: replace the old state with the new state so react can re-render the old component 
           //finally: the problem relate to redux state
-          navigate('/Movies');
+          navigate('/admin/Movies');
         }
       }else{
         dispatch(addToast({ message: res.Message, type: "failed" }));

@@ -16,15 +16,13 @@ const route = express.Router();
 
 const initLanguageRouter = (app) => {
   route.get("/getAllLanguages", asyncHandler(getAllLanguages));
-  route.get("/getLanguagesFromAFilm/:film_id", asyncHandler(getLanguagesFromAFilm));
-  route.post("/createLanguage",authenticateUser,authenticateAdmin, asyncHandler(createALanguage));
-  route.post("/createALanguageFilm",authenticateUser,authenticateAdmin,asyncHandler(createALanguageFilm));
-  route.delete(
-    "/deleteLanguage/:id",
-    asyncHandler(authenticateUser),
-    asyncHandler(authenticateAdmin),
-    asyncHandler(deleteALanguage)
+  route.get(
+    "/getLanguagesFromAFilm/:film_id",
+    asyncHandler(getLanguagesFromAFilm)
   );
+  route.post("/createLanguage", asyncHandler(createALanguage));
+  route.post("/createALanguageFilm", asyncHandler(createALanguageFilm));
+  route.delete("/deleteLanguage/:id", asyncHandler(deleteALanguage));
 
   return app.use("/api/v1/language", route);
 };

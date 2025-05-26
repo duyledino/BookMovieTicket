@@ -41,6 +41,7 @@ function AddToStoreButton() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
+          credentials: "include"
         }
       );
       if (resFilm.status !== 400) {

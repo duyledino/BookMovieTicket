@@ -37,7 +37,7 @@ const CalendarTable = () => {
   //TODO: time repesent time_id: yyyy-mm-dd-hh-mm-00
   const onDelete = async (enetityID) => {
     const res = await axios.delete(
-      `https://bookmovieticket.onrender.com/api/v1/calendar/deleteACalendar/${enetityID}`
+      `https://bookmovieticket.onrender.com/api/v1/calendar/deleteACalendar/${enetityID}`,{withCredentials: true}
     );
     return res;
   };

@@ -39,6 +39,7 @@ const authenticateUser = (req, res, next) => {
 
 const authenticateAdmin = (req, res, next) => {
   const isAdmin = req.user.isAdmin;
+  console.log(isAdmin);
   if (!isAdmin) return res.status(203).json({ Message: "Expire or wrong token" });
   next();
 };

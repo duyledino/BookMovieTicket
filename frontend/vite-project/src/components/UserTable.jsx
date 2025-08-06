@@ -36,7 +36,7 @@ function UserTable() {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8001/api/v1/user/getAllUser",
+          `${import.meta.env.VITE_SERVER_URL}/user/getAllUser`,
           { credentials: "include" }
         );
         if (response.status === 200) {

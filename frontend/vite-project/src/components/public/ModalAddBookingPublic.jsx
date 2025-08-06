@@ -48,7 +48,7 @@ function ModalAddBookingPublic({
     dispatch(setBookingToStore(object));
     localStorage.setItem("myBookingObject", JSON.stringify(object));
     const res = await axios.post(
-      "http://localhost:8001/api/v1/payment/create_payment_url",
+      `${import.meta.env.VITE_SERVER_URL}/payment/create_payment_url`,
       {
         amount: booking.sum,
         book_id: book_id,

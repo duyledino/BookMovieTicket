@@ -36,7 +36,7 @@ function AddToStoreButton() {
         release_date: release_date,
       };
       const resFilm = await fetch(
-        "http://localhost:8001/api/v1/film/createFilm",
+        `${import.meta.env.VITE_SERVER_URL}/film/createFilm`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -48,7 +48,7 @@ function AddToStoreButton() {
         genres.forEach(async (g) => {
           const dataG = { genres_id: g.id.toString(), genres_name: g.name };
           const resG = await fetch(
-            "http://localhost:8001/api/v1/genre/createGenre",
+            `${import.meta.env.VITE_SERVER_URL}/genre/createGenre`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -60,7 +60,7 @@ function AddToStoreButton() {
             genres_id: dataG.genres_id,
             name: dataG.genres_name,
           };
-          await fetch("http://localhost:8001/api/v1/genre/createAGenreFilm", {
+          await fetch(`${import.meta.env.VITE_SERVER_URL}/genre/createAGenreFilm`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(genres_film),
@@ -72,7 +72,7 @@ function AddToStoreButton() {
             english_name: l.english_name,
           };
           const resL = await fetch(
-            "http://localhost:8001/api/v1/language/createLanguage",
+            `${import.meta.env.VITE_SERVER_URL}/language/createLanguage`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -85,7 +85,7 @@ function AddToStoreButton() {
             english_name: dataL.english_name,
           };
           await fetch(
-            "http://localhost:8001/api/v1/language/createALanguageFilm",
+            `${import.meta.env.VITE_SERVER_URL}/language/createALanguageFilm`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },

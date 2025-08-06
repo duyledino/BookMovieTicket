@@ -29,7 +29,7 @@ function CalendarPage() {
   useEffect(() => {
     const fetchCalendar = async () => {
       const res = await axios.get(
-        "http://localhost:8001/api/v1/film/getAllFilmSortByCalendar"
+        `${import.meta.env.VITE_SERVER_URL}/film/getAllFilmSortByCalendar`
       );
       console.log(res.data);
       if (res.status === 200) {

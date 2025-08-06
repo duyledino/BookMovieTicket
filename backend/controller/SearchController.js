@@ -1,7 +1,12 @@
 import { createClient } from "redis";
 import {pool} from "../utils/configPostgres.js";
+import dotenv from 'dotenv'
 
-const redisClient = createClient({ url: "redis://localhost:6379" });
+dotenv.config();
+
+console.log("process.env.REDIS_URL" ,process.env.REDIS_URL);
+
+const redisClient = createClient({ url: `${process.env.REDIS_URL}`});
 
 const syncPostgresToRedis = async () => {
     try {

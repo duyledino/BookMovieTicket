@@ -11,7 +11,13 @@ const poolConfig = {
   database: process.env.database,
 };
 
-const pool = new pg.Pool(poolConfig);
+// const pool = new pg.Pool(poolConfig);
+const pool = new pg.Pool({
+  connectionString: `${process.env.DATABASE_URL_HOST}`,
+  ssl:{
+    rejectUnauthorized: false
+  }
+});
 
 const testPool = () => {
   pool.connect((err, client, release) => {

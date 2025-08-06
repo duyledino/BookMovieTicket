@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
@@ -81,6 +81,9 @@ server.listen(PORT, () => {
 testPool();
 
 redisClient.on("error", (err) => console.log("Redis client error", err));
+
+
+
 redisClient.connect();
 process.on('SIGINT', async () => {
   console.log('Shutting down...');
@@ -95,6 +98,7 @@ process.on('SIGINT', async () => {
   }
 });
 
+const DayInterval = 1000*60*60*24;
 
 syncPostgresToRedis();
-setInterval(syncPostgresToRedis,20000); // refresh each 20s
+setInterval(syncPostgresToRedis,DayInterval); // refresh each 1 day

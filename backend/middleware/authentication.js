@@ -17,7 +17,7 @@ const createToken = (user, res) => {
   });
   res.cookie("token", token, {
     httpOnly: true, // Prevents client-side access
-    // secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
     secure: false,
     sameSite: "Lax", // Helps with CSRF protection
     maxAge: 7 * 24 * 60 * 60 * 1000, // optional: cookie expiry

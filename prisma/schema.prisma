@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model popcorn {
+  popcorn_id           String         @id
+  popcorn_image_base64 String         @default("")
+  name                 String         @default("bap nuoc tam")
+  price                BigInt         @default(0)
+  booked               Int            @default(0)
+  total                BigInt         @default(0)
+  book_popcorn         book_popcorn[]
+}
+
+model book_popcorn {
+  popcorn_id    String
+  book_id       String
+  book_frequent Int     @default(0)
+  total_price   BigInt  @default(0)
+  popcorn       popcorn @relation(fields: [popcorn_id], references: [popcorn_id], onDelete: Cascade, onUpdate: NoAction)
+  booking       booking @relation(fields: [book_id], references: [book_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([popcorn_id, book_id])
+}
+
+model seat {
+  seat_id       String          @id
+  theater_id    String
+  seat_name     String
+  price         BigInt          @default(0)
+  seat_calendar seat_calendar[]
+  theater       theater         @relation(fields: [theater_id], references: [theater_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model seat_calendar {
+  calendar_id    String
+  seat_id        String
+  time_id        String
+  book_id        String    @default("No Book Yet")
+  available_seat Boolean   @default(true)
+  calendar       calendar  @relation(fields: [calendar_id], references: [calendar_id], onDelete: Cascade, onUpdate: NoAction)
+  seat           seat      @relation(fields: [seat_id], references: [seat_id], onDelete: Cascade, onUpdate: NoAction)
+  booking        booking[]
+
+  @@id([calendar_id, seat_id])
+}
+
+model booking {
+  book_id          String         @id
+  calendar_id      String
+  customer_id      String
+  theater_id       String
+  seat_id          String
+  book_time        DateTime       @default(now()) @db.Timestamp(6)
+  total_price_book BigInt         @default(0)
+  book_popcorn     book_popcorn[]
+  seat_calendar    seat_calendar  @relation(fields: [calendar_id, seat_id], references: [calendar_id, seat_id], onDelete: Cascade, onUpdate: NoAction)
+  calendar         calendar       @relation(fields: [calendar_id], references: [calendar_id], onDelete: Cascade)
+  customer         customer       @relation(fields: [customer_id], references: [customer_id], onDelete: Cascade)
+  theater          theater        @relation(fields: [theater_id], references: [theater_id])
+}
+
+//TODO: add income column
+model calendar {
+  calendar_id    String          @id
+  theater_id     String
+  available_seat Int
+  total_seat     Int
+  film_id        String
+  showtime       DateTime        @default(now()) @db.Timestamp(6)
+  booking        booking[]
+  film           film            @relation(fields: [film_id], references: [film_id], onDelete: Cascade, onUpdate: NoAction)
+  seat_calendar  seat_calendar[]
+  theater        theater         @relation(fields: [theater_id], references: [theater_id])
+}
+
+model customer {
+  customer_id   String    @id // unique identifier
+  username      String    @unique // this ensures that username is unique
+  phone         String    @default("0123456789")
+  customer_name String?
+  DateOfBirth   DateTime  @default(now()) @db.Timestamp(6)
+  password      String
+  isAdmin       Boolean   @default(false)
+  createDate    DateTime  @default(now()) @db.Timestamp(6)
+  booking       booking[]
+}
+
+model genre {
+  genres_id   String        @id
+  genres_name String
+  film        genres_film[] //1 genres has n movies  
+}
+
+model film {
+  film_id        String          @id
+  film_name      String
+  poster_path    String          @default("Movies\\frontend\\vite-project\\src\\images\\Film-photo-via-Canva-Pro.png")
+  backdrop_path  String          @default("Movies\\frontend\\vite-project\\src\\images\\Film-photo-via-Canva-Pro.png")
+  overview       String          @default("some overview")
+  vote_average   Int             @default(0)
+  book_frequency Int             @default(0)
+  adult          Boolean         @default(false)
+  tagline        String          @default("some tagline")
+  runtime        Int             @default(0)
+  release_date   String          @default("0000-00-00")
+  active         Boolean         @default(false)
+  calendar       calendar[]
+  genres         genres_film[] //1 movie has n genres
+  language_film  language_film[]
+}
+
+model language {
+  iso_639_1    String          @id
+  english_name String
+  film         language_film[]
+}
+
+model language_film {
+  iso_639_1    String
+  film_id      String
+  english_name String   @default("No language")
+  film         film     @relation(fields: [film_id], references: [film_id], onDelete: Cascade, onUpdate: NoAction)
+  language     language @relation(fields: [iso_639_1], references: [iso_639_1], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([iso_639_1, film_id])
+}
+
+model genres_film {
+  film_id   String
+  genres_id String
+  name      String @default("No genre")
+  // n to n relation between film and genres
+  film      film   @relation(fields: [film_id], references: [film_id], onDelete: Cascade, onUpdate: NoAction)
+  genres    genre  @relation(fields: [genres_id], references: [genres_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([film_id, genres_id])
+}
+
+model theater {
+  theater_id     String     @id
+  theater_name   String
+  number_of_seat Int        @default(30)
+  seat           seat[]
+  booking        booking[]
+  calendar       calendar[]
+}

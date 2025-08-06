@@ -26,7 +26,7 @@ const createToken = (user, res) => {
 };
 
 const authenticateUser = (req, res, next) => {
-  console.log(req.cookies);
+  console.log("cookies in authenticateUser",req.cookies);
   if (!req.cookies || !req.cookies.token)
     return res.status(203).json({ Message: "No Token" });
   const token = req.cookies.token;
@@ -38,6 +38,7 @@ const authenticateUser = (req, res, next) => {
 };
 
 const authenticateAdmin = (req, res, next) => {
+  console.log("user in authenticateAdmin",req.user);
   const isAdmin = req.user.isAdmin;
   console.log(isAdmin);
   if (!isAdmin) return res.status(203).json({ Message: "Expire or wrong token" });

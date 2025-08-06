@@ -20,7 +20,7 @@ function ContactBot() {
   console.log(chat);
   useEffect(() => {
     console.log("in websocket");
-    socketRef.current = new WebSocket("ws://localhost:8001/ws");
+    socketRef.current = new WebSocket(`${import.meta.env.VITE_SOCKET_HOST}`);
     socketRef.current.onopen = () => {
       console.log(console.log("✅ WebSocket connected"));
     };

@@ -3,7 +3,7 @@ import Navbar from "../../components/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
 import NavPublic from "./NavPublic";
 import Footer from "./Footer";
-import ContactBot from "./contactBot";
+import ContactBot from "./ContactBot";
 import MobileNavPublic from "./MobileNavPublic";
 
 function LayoutPublic() {

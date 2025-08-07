@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { addToast } from "../../slices/toastSlice";
+import Loading from "../../components/Loading";
 
 export default function PaymentResult() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const object = JSON.parse(localStorage.getItem("myBookingObject"));
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState("pending");
@@ -19,12 +21,14 @@ export default function PaymentResult() {
     const film_id = searchParams.get("film_id");
     const createNow = async () => {
       if (responseCode === "00") {
+        setLoading(true);
         const res = await axios.post(
           `${import.meta.env.VITE_SERVER_URL}/booking/createBooking`,
           object,
           { withCredentials: true }
         );
         if (res.status === 200) {
+          setLoading(false);
           setStatus("success");
           setMessage(
             `Payment successful for Order #${txnRef} - Amount: ${
@@ -32,14 +36,24 @@ export default function PaymentResult() {
             } VND`
           );
           localStorage.removeItem("myBookingObject");
-          localStorage.setItem("paymentStatus",JSON.stringify({paymentStatus: "ok"}));
+          localStorage.setItem(
+            "paymentStatus",
+            JSON.stringify({ paymentStatus: "ok" })
+          );
           dispatch(addToast({ message: res.data.Message, type: "success" }));
-          dispatch(addToast({ message: "Hãy quay lại trang cũ để xem cập nhật", type: "success" }));
+          dispatch(
+            addToast({
+              message: "Hãy quay lại trang cũ để xem cập nhật",
+              type: "success",
+            })
+          );
         } else {
+          setLoading(false);
           dispatch(addToast({ message: res.data.Message, type: "failed" }));
           setMessage(`Payment failed: ${res.data.Message}`);
         }
       } else {
+        setLoading(false);
         setStatus("failed");
         const errorMsg = getErrorMessage(responseCode);
         setMessage(`Payment failed: ${errorMsg}`);
@@ -70,28 +84,31 @@ export default function PaymentResult() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
-      <div className="p-6 rounded-xl shadow-lg bg-white w-full max-w-md text-center">
-        {status === "pending" ? (
-          <h2 className="text-xl font-semibold text-gray-700">
-            Processing payment result...
-          </h2>
-        ) : status === "success" ? (
-          <>
-            <h2 className="text-2xl font-bold text-green-600">
-              🎉 Payment Successful
+    <>
+      {loading ? <Loading /> : ""}
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+        <div className="p-6 rounded-xl shadow-lg bg-white w-full max-w-md text-center">
+          {status === "pending" ? (
+            <h2 className="text-xl font-semibold text-gray-700">
+              Processing payment result...
             </h2>
-            <p className="mt-2 text-gray-600">{message}</p>
-          </>
-        ) : (
-          <>
-            <h2 className="text-2xl font-bold text-red-600">
-              ❌ Payment Failed
-            </h2>
-            <p className="mt-2 text-gray-600">{message}</p>
-          </>
-        )}
+          ) : status === "success" ? (
+            <>
+              <h2 className="text-2xl font-bold text-green-600">
+                🎉 Payment Successful
+              </h2>
+              <p className="mt-2 text-gray-600">{message}</p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold text-red-600">
+                ❌ Payment Failed
+              </h2>
+              <p className="mt-2 text-gray-600">{message}</p>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

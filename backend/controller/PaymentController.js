@@ -59,7 +59,7 @@ const createPaymentController = (req, res) => {
 const getPaymentResult = (req, res) => {
   const paymentResult = req.query;
   const vnp_ResponseCode = paymentResult.vnp_ResponseCode;
-  console.log(vnp_ResponseCode);
+  console.log("get payment result: ",vnp_ResponseCode);
   if (vnp_ResponseCode == "00") {
     return res.status(200).json("Thanh Toán Thành Công");
   } else if (vnp_ResponseCode == "11") {

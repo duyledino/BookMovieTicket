@@ -4,25 +4,31 @@ import { useDispatch } from "react-redux";
 import { addToast } from "../../slices/toastSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { setUser } from "../../slices/userDetail";
+import Loading from "../../components/Loading";
 
 function LoginPage() {
+  const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [appear, setAppear] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     axios.defaults.withCredentials = true;
-    const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/user/login`, {
-      username: username,
-      password: password,
-    });
+    const res = await axios.post(
+      `${import.meta.env.VITE_SERVER_URL}/user/login`,
+      {
+        username: username,
+        password: password,
+      }
+    );
     console.log(res.data);
-    localStorage.setItem("user",JSON.stringify(res.data.user));
+    localStorage.setItem("user", JSON.stringify(res.data.user));
     if (res.status === 200) {
       dispatch(setUser(res.data.user));
-      localStorage.setItem("user",JSON.stringify(res.data.user));
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       dispatch(addToast({ message: res.data.Message, type: "success" }));
       if (res.data.user.isAdmin === true) {
         dispatch(
@@ -31,12 +37,15 @@ function LoginPage() {
             type: "success",
           })
         );
+        setLoading(false);
         navigate("/admin");
         return;
       }
+      setLoading(false);
       navigate("/");
     } else {
       dispatch(addToast({ message: res.data.Message, type: "failed" }));
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -46,6 +55,7 @@ function LoginPage() {
   }, []);
   return (
     <>
+      {loading ? <Loading /> : ""}
       <div className="bg-black relative text-white flex min-h-screen flex-col items-center pt-16 sm:justify-center sm:pt-0">
         {appear ? (
           <Link

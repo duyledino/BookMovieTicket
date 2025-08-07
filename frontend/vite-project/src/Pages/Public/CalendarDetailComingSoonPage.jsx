@@ -7,33 +7,36 @@ import { FaUserPlus } from "react-icons/fa6";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { getVideoLength } from "../../utils/getVideoLength.js";
+import Loading from "../../components/Loading.jsx";
 
 function CalendarDetailComingSoonPage() {
   const location = useLocation();
   const film_id = location.pathname.split("/").at(-1);
+  const [loading, setLoading] = useState(false);
 
   const [film, setFilm] = useState(null);
 
   console.log(film_id);
 
-  useEffect(()=>{
-    window.scrollTo({
-      top:0,
-      behavior: "smooth"
-    })
-  },[])
   useEffect(() => {
     window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-    })
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     const fetchCalendar = async () => {
+      setLoading(true);
       const resFilm = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/film/getAFilm?film_id=${film_id}`
       );
 
-      if ( resFilm.status === 200) {
-
+      if (resFilm.status === 200) {
+        setLoading(false);
         setFilm(resFilm.data.film);
       }
     };
@@ -42,6 +45,7 @@ function CalendarDetailComingSoonPage() {
 
   return (
     <>
+      {loading ? <Loading /> : ""}
       <div className="w-full flex lg:flex-row flex-col gap-28 mb-10">
         {film !== null && (
           <>

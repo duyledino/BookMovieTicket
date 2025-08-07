@@ -4,17 +4,21 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import { Outlet, useLocation } from "react-router-dom";
+import Loading from "../../components/Loading";
 
 function NotYetPage() {
+  const [loading, setLoading] = useState(false);
   const [comingSoons, setComingSoons] = useState([]);
   const loction = useLocation();
   const [isInDetail, setIsInDetail] = useState(false);
   useEffect(() => {
     const fetchFilm = async () => {
+      setLoading(true);
       const res = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/film/getAllComingSoonFilm`
       );
       if (res.status === 200) {
+        setLoading(false);
         setComingSoons(res.data.allComingSoon);
       }
     };
@@ -30,6 +34,7 @@ function NotYetPage() {
   console.log();
   return (
     <>
+      {loading ? <Loading /> : ""}
       <div className="container w-full m-auto max-w-[80%] mt-4 mb-4">
         {isInDetail ? (
           <Outlet />

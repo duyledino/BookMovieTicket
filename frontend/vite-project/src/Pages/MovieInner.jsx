@@ -8,27 +8,35 @@ import ModelDel from "../components/ModelDel.jsx";
 import axios from "axios";
 import { addToast } from "../slices/toastSlice.js";
 import MoviesBoxAdmin from "../components/MoviesBoxAdmin.jsx";
+import Loading from "../components/Loading.jsx";
 
 function MovieInner() {
-  const [isChange,setIsChange] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isChange, setIsChange] = useState(false);
   const dispatch = useDispatch();
   const allFilm = useSelector((state) => state.innerMovies.innerMovie);
   // const change = useSelector(state=>state.globalVariable.globalChange);
   const fetchFilm = async () => {
-    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/film/getAllFilm`,{credentials: "include"});
+    setLoading(true);
+    const res = await fetch(
+      `${import.meta.env.VITE_SERVER_URL}/film/getAllFilm`,
+      { credentials: "include" }
+    );
     if (res.status === 200) {
+      setLoading(false);
       const data = await res.json();
       dispatch(addAll(data.allFilm));
-    }else if(res.status===203){
-      dispatch(addToast({message: res.data.Message,type: "failed"}));
+    } else if (res.status === 203) {
+      setLoading(false);
+      dispatch(addToast({ message: res.data.Message, type: "failed" }));
       localStorage.removeItem("user");
       navigate("/404NotFound");
     }
   };
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     fetchFilm();
-  },[isChange])
+  }, [isChange]);
   // useEffect(() => {
   //   if(location.state?.refresh) {
   //     console.log(location.state.refresh);
@@ -37,6 +45,7 @@ function MovieInner() {
   // }, [location.state]);
   return (
     <>
+      {loading ? <Loading /> : ""}
       <div className="containerOutterFilm w-full max-w-[85%] m-auto">
         <ul className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 list-none">
           {allFilm.length > 0 &&
@@ -73,7 +82,10 @@ function MovieInner() {
               //     </div>
               //   </Link>
               // </li>
-              <MoviesBoxAdmin setIsChange={()=>setIsChange(!isChange)} film={film}/>
+              <MoviesBoxAdmin
+                setIsChange={() => setIsChange(!isChange)}
+                film={film}
+              />
             ))}
         </ul>
       </div>

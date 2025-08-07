@@ -8,8 +8,10 @@ import { useRef } from "react";
 import { FaAngleRight } from "react-icons/fa6";
 import { FaAngleLeft } from "react-icons/fa6";
 import NavigatePoster from "./NavigatePoster";
+import Loading from "../Loading";
 
 function HeroPublic() {
+  const [loading,setLoading] = useState(false);
   const [lastestFilms, setLastestFilm] = useState([]);
   const [background, setBackground] = useState("");
   const [selectedFilm, setSelectedFilm] = useState(null);
@@ -26,10 +28,12 @@ function HeroPublic() {
   }, []);
   useEffect(() => {
     const fetchFilm = async () => {
+      setLoading(true);
       const res = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/film/getLastestFilm`
       );
       if (res.status === 200) {
+        setLoading(false);
         setLastestFilm(res.data.latestFilm);
         setSelectedFilm(res.data.latestFilm[current.current].poster_path);
         setBackground(res.data.latestFilm[current.current].backdrop_path);
@@ -98,6 +102,8 @@ function HeroPublic() {
   }, [current.current]);
   return (
     <>
+      {loading ? <Loading/> : ""}
+      {/* <Loading/> */}
       <div className="w-full h-[700px] relative overflow-y-hidden">
         <img
           key={background} //tell React this is a different img so React can render appearAnimation each time it appear

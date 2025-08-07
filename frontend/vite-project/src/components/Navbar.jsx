@@ -3,6 +3,8 @@ import { NavLink, useLocation } from "react-router-dom";
 import active from "../utils/activeClass.js";
 import ModalSelectLogin from "./ModalSelectLogin.jsx";
 import { FaBarsStaggered } from "react-icons/fa6";
+// import Logo from "";
+import Logo from "../images/Logo-removebg-preview.png";
 
 const navLink = [
   { link: "/admin", linkName: "Dashboard", className: "admin" },
@@ -39,7 +41,7 @@ function Navbar({setIsClick}) {
     <>
       <div className="w-full h-[100px] bg-black text-[#565E6C] flex justify-between items-center p-2.5 shadow-underline mb-8">
         <NavLink to={"/"} className="logo text-amber-300 font-bold text-4xl">
-          Logo
+          <img src={Logo} alt="Logo Here" className="w-14 h-auto"/>
         </NavLink>
         <ul className="menu lg:flex hidden flex-wrap list-none justify-evenly items-center w-[33rem] gap-x-14 gap-y-2 text-xl font-bold">
           {navLink.map((item, index) => (

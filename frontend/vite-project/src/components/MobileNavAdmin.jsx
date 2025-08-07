@@ -5,6 +5,7 @@ import { BiDoorOpen } from "react-icons/bi";
 import { addToast } from "../slices/toastSlice";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import Logo from "../images/Logo-removebg-preview.png";
 
 const navLink = [
   { link: "/admin", linkName: "Dashboard", className: "admin" },
@@ -56,7 +57,7 @@ const MobileNavAdmin = ({ isClick, setIsClick }) => {
       </div>
       <div className="flex flex-col w-[95%] items-center mb-5 gap-5">
         <Link to={"/"}>
-          <h1 className="text-7xl text-amber-300 font-extrabold ">Logo</h1>
+          <img src={Logo} alt="Logo Here" className="w-24 h-auto"/>
         </Link>
       </div>
       <ul className="flex flex-col w-[95%] mt-3">

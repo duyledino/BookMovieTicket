@@ -3,21 +3,30 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import tempImg from "../images/Film-photo-via-Canva-Pro.png";
 import { fixFormatDateRespone } from "../utils/getFormatDateNow";
+import Loading from "../components/Loading";
 
 const CalendarDetail = () => {
+  const [loading, setLoading] = useState(false);
   const { calendarId } = useParams();
   const [calendar, setCalendar] = useState(null);
   useEffect(() => {
     const getCalendarDetail = async () => {
+      setLoading(true);
       const res = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/calendar/getSpecificCalendar?calendar_id=${calendarId}`
+        `${
+          import.meta.env.VITE_SERVER_URL
+        }/calendar/getSpecificCalendar?calendar_id=${calendarId}`
       );
-      if (res.status === 200) setCalendar(res.data.specificCalendar);
+      if (res.status === 200) {
+        setCalendar(res.data.specificCalendar);
+        setLoading(false);
+      }
     };
     getCalendarDetail();
   }, []);
   return (
     <>
+      {loading ? <Loading /> : ""}
       {calendar !== null ? (
         <>
           <div className="container m-auto overflow-y-auto">

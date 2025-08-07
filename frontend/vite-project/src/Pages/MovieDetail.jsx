@@ -6,13 +6,16 @@ import { addDetail } from "../slices/movieDetailSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getVideoLength } from "../utils/getVideoLength.js";
 import AddToStoreButton from "../components/AddToStoreButton.jsx";
+import Loading from "../components/Loading.jsx";
 
 function MovieDetail() {
+  const [loading, setLoading] = useState(false);
   const { movieId } = useParams();
   const dispatch = useDispatch();
   const detail = useSelector((state) => state.movieDetail.detail);
   useEffect(() => {
     const fetchFilm = async () => {
+      setLoading(true);
       const res = await fetch(
         `${
           import.meta.env.VITE_SERVER_URL
@@ -21,12 +24,16 @@ function MovieDetail() {
       );
       const data = await res.json();
       console.log(data);
-      if (data) dispatch(addDetail(data.film));
+      if (data) {
+        dispatch(addDetail(data.film));
+        setLoading(false);
+      }
     };
     fetchFilm();
   }, []);
   return (
     <>
+      {loading ? <Loading /> : ""}
       {Object.keys(detail).length !== 0 ? (
         <div className="container w-full max-[90%] m-auto">
           <div className="hero flex lg:flex-row flex-col w-full p-2.5 gap-4">

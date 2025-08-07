@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid";
 import axios from "axios";
 import { setBookingToStore } from "../../slices/bookingSlice";
 import { useEffect, useState } from "react";
+import Loading from "../Loading";
 
 function ModalAddBookingPublic({
   setIsChange,
@@ -13,6 +14,7 @@ function ModalAddBookingPublic({
   OnClose,
   isOpen,
   booking,
+  setLoading
 }) {
   if (!isOpen) return null;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -20,6 +22,7 @@ function ModalAddBookingPublic({
   const navigate = useNavigate();
   const onCreate = async () => {
     console.log(user);
+    setLoading(true);
     if (user === undefined || user === null) {
       dispatch(
         addToast({
@@ -27,10 +30,12 @@ function ModalAddBookingPublic({
           type: "failed",
         })
       );
+      setLoading(false);
       navigate("/Login");
       return;
     }
     if (!booking.seat) {
+      setLoading(false);
       dispatch(addToast({ message: "Chua Chon ghe", type: "failed" }));
       return;
     }
@@ -74,6 +79,7 @@ function ModalAddBookingPublic({
           behavior: "smooth",
         });
         setIsChange();
+        setLoading(false);
         localStorage.removeItem("paymentStatus");
         OnClose();
       }
@@ -131,7 +137,7 @@ function ModalAddBookingPublic({
                 {booking.seat
                   ? booking.seat?.seat_id +
                       ` = ` +
-                      booking.seat?.price.toLocaleString('vi-VN') +
+                      booking.seat?.price.toLocaleString("vi-VN") +
                       " VND" || ""
                   : "Chua Chọn ghế"}
               </div>
@@ -144,7 +150,8 @@ function ModalAddBookingPublic({
                   ? booking.popCorn.map((p) => (
                       <>
                         <div className="text-black font-bold">
-                          {p.name} x {p.book_frequent} = {p.total_price.toLocaleString('vi-VN')} VND
+                          {p.name} x {p.book_frequent} ={" "}
+                          {p.total_price.toLocaleString("vi-VN")} VND
                         </div>
                       </>
                     ))
@@ -154,7 +161,7 @@ function ModalAddBookingPublic({
             <div className="flex items-center gap-3 w-full">
               <div className="text-xl w-[27%]">Tong</div>
               <div className="w-full p-2 font-bold bg-gray-100 text-red-400 text-xl rounded flex flex-col items-center justify-between">
-                {booking.sum.toLocaleString('vi-VN')} VND
+                {booking.sum.toLocaleString("vi-VN")} VND
               </div>
             </div>
             <div className="pt-4 flex justify-center">

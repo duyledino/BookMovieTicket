@@ -6,8 +6,10 @@ import { addPage } from "../slices/pageSlice.js";
 import { addMoviesInPage } from "../slices/movieSlice.js";
 import AddToStoreButton from "../components/AddToStoreButton.jsx";
 import { addToast } from "../slices/toastSlice.js";
+import Loading from "../components/Loading.jsx";
 
 function MovieOutter() {
+  const [loading, setLoading] = useState(false);
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
   useEffect(() => {
     const handleWidth = () => setInnerWidth(window.innerWidth);
@@ -19,6 +21,7 @@ function MovieOutter() {
   const allFilm = useSelector((state) => state.movies.myMovies);
   useEffect(() => {
     const fetchFilm = async () => {
+      setLoading(true);
       try {
         const res = await fetch(
           `${
@@ -27,14 +30,18 @@ function MovieOutter() {
           { credentials: "include" }
         );
         if (res.status === 203) {
+          setLoading(false);
           dispatch(addToast({ message: res.data.Message, type: "failed" }));
           localStorage.removeItem("user");
           navigate("/404NotFound");
         }
         const data = await res.json();
         dispatch(addMoviesInPage(data.listFilm));
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.error("Failed to fetch film.");
+        dispatch(addToast({ message: res.data?.Message, type: "failed" }));
       }
     };
     const scrollHandle = () => {
@@ -52,6 +59,7 @@ function MovieOutter() {
   }, [dispatch, page]);
   return (
     <>
+      {loading ? <Loading /> : ""}
       <div className="containerOutterFilm w-full max-w-[85%] m-auto">
         <ul className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 list-none">
           {allFilm &&

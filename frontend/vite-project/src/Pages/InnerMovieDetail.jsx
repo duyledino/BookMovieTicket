@@ -5,24 +5,31 @@ import { addDetail } from "../slices/movieDetailSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getVideoLength } from "../utils/getVideoLength.js";
 import DeleteFromStoreButton from "../components/DeleteFromStoreButton.jsx";
+import Loading from "../components/Loading.jsx";
 
 function InnerMovieDetail() {
+  const [loading, setLoading] = useState(false);
   const { movieId } = useParams();
   const dispatch = useDispatch();
   const detail = useSelector((state) => state.movieDetail.detail);
   useEffect(() => {
     const fetchFilm = async () => {
+      setLoading(true);
       const resFilm = await fetch(
         `${import.meta.env.VITE_SERVER_URL}/film/getAFilm?film_id=${movieId}`
       );
       const dataFilm = await resFilm.json();
       if (dataFilm) {
         const resLanguage = await fetch(
-          `${import.meta.env.VITE_SERVER_URL}/language/getLanguagesFromAFilm/${movieId}`
+          `${
+            import.meta.env.VITE_SERVER_URL
+          }/language/getLanguagesFromAFilm/${movieId}`
         );
         const dataLanguage = await resLanguage.json();
         const resGenre = await fetch(
-          `${import.meta.env.VITE_SERVER_URL}/genre/getGenresFromAFilm/${movieId}`
+          `${
+            import.meta.env.VITE_SERVER_URL
+          }/genre/getGenresFromAFilm/${movieId}`
         );
         const dataGenre = await resGenre.json();
         if (dataFilm && dataLanguage && dataGenre) {
@@ -34,11 +41,13 @@ function InnerMovieDetail() {
           dispatch(addDetail(data));
         }
       }
+      setLoading(false);
     };
     fetchFilm();
   }, []);
   return (
     <>
+      {loading ? <Loading /> : ""}
       {Object.keys(detail).length !== 0 ? (
         <div className="container w-full max-[90%] m-auto">
           <div className="hero flex lg:flex-row flex-col w-full p-2.5 gap-4">
@@ -117,7 +126,9 @@ function InnerMovieDetail() {
               </h2>
             </div>
             <div className="moreDetail">
-              <h2 className="text-white md:text-4xl text-2xl mb-6">More Detail</h2>
+              <h2 className="text-white md:text-4xl text-2xl mb-6">
+                More Detail
+              </h2>
               <div className="flex lg:flex-row flex-col lg:justify-between text-2xl">
                 <div>
                   <h3 className="lg:text-gray-500  text-amber-300">Genres</h3>
@@ -144,7 +155,9 @@ function InnerMovieDetail() {
                 </div>
                 <div>
                   <h3 className="lg:text-gray-500  text-amber-300">Tagline</h3>
-                  <p className="lg:text-gray-500 text-white">{detail.tagline}</p>
+                  <p className="lg:text-gray-500 text-white">
+                    {detail.tagline}
+                  </p>
                 </div>
               </div>
             </div>

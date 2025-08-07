@@ -8,6 +8,7 @@ import {
 import { shorten } from "../../utils/shortenTitle.js";
 import { useDispatch } from "react-redux";
 import { addToast } from "../../slices/toastSlice.js";
+import Loading from "../../components/Loading.jsx";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ function Profile() {
     searchParams.get("customer_id")
   );
   console.log(customer_id);
+  const [loading, setLoading] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [username, setUsername] = useState("");
@@ -26,6 +28,7 @@ function Profile() {
   console.log(searchParams);
   const [user, setUser] = useState([]);
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     if (newUsername === "" || customername === "" || newUsername.length <= 5) {
       dispatch(
@@ -35,6 +38,7 @@ function Profile() {
           type: "failed",
         })
       );
+      setLoading(false);
       return;
     }
     if (isExistsUsername === true) {
@@ -44,6 +48,7 @@ function Profile() {
           type: "failed",
         })
       );
+      setLoading(false);
       return;
     }
     //TODO: add phoneRegex
@@ -51,16 +56,20 @@ function Profile() {
       dispatch(
         addToast({ message: "Số điện thoại không đúng", type: "failed" })
       );
+      setLoading(false);
       return;
     }
     const temp = new Date(dob);
     console.log("", now.getFullYear() - temp.getFullYear());
     if (now.getFullYear() - temp.getFullYear() < 18) {
       dispatch(addToast({ message: "Tuổi phải lớn hơn 18", type: "failed" }));
+      setLoading(false);
       return;
     }
     const res = await axios.patch(
-      `${import.meta.env.VITE_SERVER_URL}/user/updateProfile?customer_id=${customer_id}`,
+      `${
+        import.meta.env.VITE_SERVER_URL
+      }/user/updateProfile?customer_id=${customer_id}`,
       {
         username,
         customer_name: customername,
@@ -73,26 +82,33 @@ function Profile() {
     if (res.status === 200) {
       dispatch(addToast({ message: res.data.Message, type: "success" }));
       setIsUpdate(true);
+      setLoading(false);
     } else {
       dispatch(addToast({ message: res.data.Message, type: "failed" }));
+      setLoading(false);
     }
   };
   const now = new Date();
   console.log(now.getFullYear());
   useEffect(() => {
     window.scrollTo({
-      top:0,behavior:'smooth'
-    })
+      top: 0,
+      behavior: "smooth",
+    });
     // console.log(customer_id);
     const fetchUser = async () => {
+      setLoading(true);
       const res = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/user/getAUser?customerId=${customer_id}`,
+        `${
+          import.meta.env.VITE_SERVER_URL
+        }/user/getAUser?customerId=${customer_id}`,
         { withCredentials: true }
       );
       if (res.status === 200) {
         setUser(
           Object.entries(res.data.user).map(([key, value]) => ({ key, value }))
         );
+        setLoading(false);
       }
     };
     if (
@@ -124,7 +140,9 @@ function Profile() {
       if (newUsername === "") return;
       if (newUsername === username) return;
       const res = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/search/searchUsername?username=${newUsername}`
+        `${
+          import.meta.env.VITE_SERVER_URL
+        }/search/searchUsername?username=${newUsername}`
       );
       console.log(res);
       if (res.status === 200) {
@@ -140,6 +158,7 @@ function Profile() {
   }, [newUsername]);
   return (
     <>
+      {loading ? <Loading /> : ""}
       <div className="w-full max-w-[90%] m-auto p-3">
         {user?.length > 0 && (
           <>

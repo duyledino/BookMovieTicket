@@ -22,8 +22,10 @@ import { setPopCorn } from "../../slices/popcornSlice.js";
 import ModalAddBookingPublic from "../../components/public/ModalAddBookingPublic.jsx";
 import { DateTime } from "luxon";
 import NavigatePoster from "../../components/public/NavigatePoster.jsx";
+import Loading from "../../components/Loading.jsx";
 
 function CalendarDetailPage() {
+  const [loading, setLoading] = useState(false);
   //calendarId 3546a696-7859-493f-b7c6-fee46024ccca(customer_id) THEATER1B05(seat_id) THEATER1(theater_id)
   // [ { popCorn_id: 'bapnuoc2', book_frequent: 5, total_price: 1000000 } ](popCorn) yyyy-MM-dd HH:mm:ss (time)
   const [searchParams] = useSearchParams();
@@ -130,6 +132,7 @@ function CalendarDetailPage() {
   useEffect(() => {
     setSum(0);
     const fetchCalendar = async () => {
+      setLoading(true);
       const resFilm = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/film/getAFilm?film_id=${film_id}`
       );
@@ -142,16 +145,18 @@ function CalendarDetailPage() {
         dispatch(setSeatCalendar(resCalendar.data.fixSpecificCalendar));
         dispatch(setCalendarDetail(resCalendar.data.fixSpecificCalendar));
         setAllCalendar(resCalendar.data.fixSpecificCalendar);
-
         setFilm(resFilm.data.film);
+        setLoading(false);
       }
     };
     const fetchPopCorn = async () => {
+      setLoading(true);
       const res = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/popCorn/getAllPopCorn`
       );
       if (res.status === 200 && res.data?.fixAllpopcorn?.length > 0) {
         dispatch(setPopCorn(res.data?.fixAllpopcorn));
+        setLoading(false);
       }
     };
     fetchCalendar();
@@ -162,6 +167,7 @@ function CalendarDetailPage() {
       setSelectSeat(null); // restart select seat to null for current state of all seat
       setBookedPopCorn([]); // restart bookedpopcorn to [] for current state (user create a booking)
       const fetchCalendar = async () => {
+        setLoading(true);
         const resCalendar = await axios.get(
           `${
             import.meta.env.VITE_SERVER_URL
@@ -169,6 +175,7 @@ function CalendarDetailPage() {
         );
         if (resCalendar.status === 200) {
           setSpecificCalendar(resCalendar.data.specificCalendar);
+          setLoading(false);
         }
       };
       fetchCalendar();
@@ -211,7 +218,9 @@ function CalendarDetailPage() {
   console.log(allPopCorn);
   return (
     <>
+      {loading ? <Loading /> : ""}
       <ModalAddBookingPublic
+        setLoading={setLoading}
         OnClose={() => setOpen(false)}
         isOpen={isOpen}
         setIsChange={() => setIsChange((prev) => !prev)}
@@ -506,7 +515,11 @@ function CalendarDetailPage() {
                     : undefined
                 }
               >
-                <img src={p.base64Image||popcorn} alt="" className="object-contain"/>
+                <img
+                  src={p.base64Image || popcorn}
+                  alt=""
+                  className="object-contain"
+                />
                 <div className="flex flex-col justify-between">
                   <div>
                     <h2 className="text-2xl text-amber-300">{p.name}</h2>
@@ -654,7 +667,7 @@ function CalendarDetailPage() {
             {specificCalendar?.theater.theater_name}
           </h1>
         </div>
-        <div className="flex lg:justify-between gap-7 lg:w-[30%] w-full justify-center">
+        <div className="flex lg:justify-normal gap-7 lg:w-[40%] w-full justify-center">
           <div className="sm:px-6 px-3 flex flex-col justify-center bg-amber-300 lg:space-y-1 space-y-0 rounded-[15px]">
             <p className="text-black font-bold">Thoi gian giu ve</p>
             <p className="text-black font-bold">{getFormatTime(new Date())}</p>

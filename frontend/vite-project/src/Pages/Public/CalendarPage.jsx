@@ -6,9 +6,11 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addToast } from "../../slices/toastSlice";
 import CalendarPublicComponentLoading from "../../components/public/CalendarPublicComponentLoading";
+import Loading from "../../components/Loading";
 
 function CalendarPage() {
   const location = useLocation();
+  const [loading, setLoading] = useState(false);
   const [isInDetail, setIsInDetail] = useState(false);
   console.log(location.pathname.split("/"));
   const [allFilm, setAllFilm] = useState([]);
@@ -28,11 +30,13 @@ function CalendarPage() {
   }, []);
   useEffect(() => {
     const fetchCalendar = async () => {
+      setLoading(true);
       const res = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/film/getAllFilmSortByCalendar`
       );
       console.log(res.data);
       if (res.status === 200) {
+        setLoading(false);
         setAllFilm(res.data.allFilm);
       }
     };
@@ -41,6 +45,7 @@ function CalendarPage() {
   console.log(allFilm);
   return (
     <>
+      {loading ? <Loading /> : ""}
       <div className="w-full max-w-[80%] m-auto mt-12 mb-12">
         <SelectCalendarPublic />
         {!isInDetail ? (

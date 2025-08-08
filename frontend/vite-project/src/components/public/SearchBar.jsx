@@ -4,25 +4,42 @@ import { useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { toCapital } from "../../utils/toCapital";
+import { useDispatch } from "react-redux";
+import { addToast } from "../../slices/toastSlice";
 
 function SearchBar() {
+  const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [founded, setFounded] = useState([]);
+  const [query,setQuery] = useState("");
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
+  // debounce technique: only fetch api when user stop typing a while after 500ms (optimize) 
+  useEffect(()=>{
+    const timer = setTimeout(()=>{
+      setQuery(search);
+    },500);
+    return ()=>clearTimeout(timer);
+  },[search])
   useEffect(() => {
     setFounded([]);
     const fetchSearch = async () => {
-      if (search !== "") {
-        const res = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/search/searchFilm?q=${search}`
+      if (query !== "") {
+        try {
+          console.log("search query: ",query);
+          const res = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/search/searchFilm?q=${query}`
         );
         if (res.status === 200 && res.data.length > 0) setFounded(res.data);
+        } catch (error) {
+          console.log(error);
+          dispatch(addToast({message: error,type:'failed'}));
+        }
       }
     };
     fetchSearch();
-  }, [search]);
+  }, [query]);
   return (
     <>
       <div className="w-full max-w-[300px] relative">

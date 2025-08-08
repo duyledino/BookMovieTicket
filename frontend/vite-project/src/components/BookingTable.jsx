@@ -78,7 +78,7 @@ const BookingTable = () => {
           <tr className="bg-gray-800 text-amber-500">
             <th className="px-6 py-3 border-b text-left">Book ID</th>
             <th className="px-6 py-3 border-b text-left">Calendar ID</th>
-            <th className="px-6 py-3 border-b text-left">Username</th>
+            <th className="px-6 py-3 border-b text-left">Customer ID</th>
             <th className="px-6 py-3 border-b text-center">Book Time</th>
             <th className="px-6 py-3 border-b text-center">Seat_ID</th>
             <th className="px-6 py-3 border-b text-center">Theater_ID</th>

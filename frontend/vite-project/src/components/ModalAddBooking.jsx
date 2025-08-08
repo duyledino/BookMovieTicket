@@ -6,6 +6,7 @@ import { setUsers } from "../slices/usersSlice";
 import { setCalendars } from "../slices/calendarsSlice";
 import { setPopCorn } from "../slices/popcornSlice";
 import {getFormatDateNow} from '../utils/getFormatDateNow.js'
+import {v4 as uuid} from 'uuid'
 
 function ModalAddBooking({ isOpen, onClose, setIsChange }) {
   if (!isOpen) {
@@ -114,6 +115,7 @@ function ModalAddBooking({ isOpen, onClose, setIsChange }) {
   }, [calendarID]);
   const onCreate = () => {
     const object ={
+      book_id: uuid(),
       customer_id: customerID,
       calendar_id: calendarID,
       seat_id: seatID,
@@ -128,7 +130,7 @@ function ModalAddBooking({ isOpen, onClose, setIsChange }) {
     console.log(object);
     const res = axios.post(
       `${import.meta.env.VITE_SERVER_URL}/booking/createBooking`,object
-      
+      ,{withCredentials:true}
     );
     return res;
   };

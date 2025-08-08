@@ -28,7 +28,7 @@ function UserTable() {
   // TODO: use modal to edit user
   const onDelete = async (entityID) => {
     const res = await axios.delete(
-      `${import.meta.env.VITE_SERVER_URL}/user/deleteUser/${entityID}`
+      `${import.meta.env.VITE_SERVER_URL}/user/deleteUser/${entityID}`,{withCredentials:true}
     );
     return res;
   };

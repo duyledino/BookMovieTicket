@@ -39,6 +39,7 @@ function ModalEditUser({ isOpen, onClose, setIsChange }) {
         customer_age: age,
         isAdmin: admin,
       }
+      ,{withCredentials:true}
     );
     if (res.status === 200) {
       setIsChange();

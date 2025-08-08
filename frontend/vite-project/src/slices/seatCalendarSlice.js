@@ -27,8 +27,9 @@ const seatCalendarSlice = createSlice({
       });
     },
     setCalendarDetail: (state, action) => {
-      const allCalendar = action.payload;
+      state.specificCalendars = [];
       const temp = []
+      const allCalendar = action.payload;
       allCalendar.forEach((t) => {
         const objectCalendar = {};
         const key = getDateRespone(t.showtime)[0];

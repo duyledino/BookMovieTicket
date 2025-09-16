@@ -15,7 +15,7 @@ const createPaymentController = (req, res) => {
   console.log(ipAddr, "----------------", req.body);
   //   if (ipAddr === "::1") ipAddr = "http://localhost:5173";
   const tmnCode = process.env.vnp_TmnCode;
-  const secretKey = "EC26SRRE7GI6807A82EQK7WS1NXH9R7L";
+  const secretKey = process.env.vnp_HashSecret;
   console.log(secretKey);
   const book_id = req.body.book_id;
   const film_id = req.body.film_id;

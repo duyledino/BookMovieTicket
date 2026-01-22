@@ -141,6 +141,7 @@ function CalendarDetailPage() {
           import.meta.env.VITE_SERVER_URL
         }/calendar/getAllCalendarFromASpecificFilm?film_id=${film_id}`
       );
+      console.log("resCalendar, resFilm: ", resCalendar.data.fixSpecificCalendar, resFilm.data.film);
       if (resCalendar.status === 200 && resFilm.status === 200) {
         dispatch(setSeatCalendar(resCalendar.data.fixSpecificCalendar));
         dispatch(setCalendarDetail(resCalendar.data.fixSpecificCalendar));
@@ -162,6 +163,7 @@ function CalendarDetailPage() {
     fetchCalendar();
     fetchPopCorn();
   }, [isChange, film_id]);
+  console.log("allPopCorn: ", allPopCorn);
   useEffect(() => {
     if (calendarId !== null) {
       setSelectSeat(null); // restart select seat to null for current state of all seat

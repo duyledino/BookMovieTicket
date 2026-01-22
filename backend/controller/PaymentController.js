@@ -20,6 +20,7 @@ const createPaymentController = (req, res) => {
   const book_id = req.body.book_id;
   const film_id = req.body.film_id;
   let vnpUrl = process.env.vnp_Url;
+  console.log("process.env.vnp_ReturnUrl: ",process.env.vnp_ReturnUrl);
   const returnUrl = process.env.vnp_ReturnUrl;
   const amount = req.body.amount;
   // const bankCode = req.body.bankCode;

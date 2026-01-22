@@ -32,7 +32,7 @@ function HeroPublic() {
       const res = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/film/getLastestFilm`
       );
-      if (res.status === 200 && res.data != null && res.data.lastestFilms !== null && res.data.lastestFilms!==undefined) {
+      if (res.status === 200 && res.data != null) {
         setLoading(false);
         setLastestFilm(res.data.latestFilm);
         setSelectedFilm(res.data.latestFilm[current.current].poster_path);

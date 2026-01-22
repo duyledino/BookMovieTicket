@@ -164,15 +164,15 @@ const getAFilm = async (req, res) => {
     });
     if (getAFilm) {
       return res.status(200).json({ Message: "Found Film", film: film });
-    } else return res.status(404).json({ Message: "Film not found" });
+    } else return res.status(200).json({ Message: "Film not found" });
   }
-  return res.status(404).json({ Message: "Film not found" });
+  return res.status(200).json({ Message: "Film not found" });
 };
 
 const getAllFilm = async (req, res) => {
   const allFilm = await prisma.film.findMany();
-  if (allFilm.length === 0) res.status(404).json({ Message: "No film found." });
-  res.status(200).json({ allFilm: allFilm });
+  if (allFilm.length === 0) return res.status(200).json({ Message: "No film found." });
+  return res.status(200).json({ allFilm: allFilm });
 };
 
 const updateAFilm = async (req, res) => {
@@ -197,7 +197,7 @@ const updateAFilm = async (req, res) => {
       film_id: existFilm.film_id,
     },
   });
-  res
+  return res
     .status(200)
     .json({ Message: "Update Film successfully", updated: updateFilm });
 };

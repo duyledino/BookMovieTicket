@@ -45,18 +45,18 @@ after insert on theater for each row
 execute function GENERATE_SEAT_AFTER_INSERT_THEATER();
 
 -- generate seat after insert calendar
-SELECT
-	*
-FROM
-	CALENDAR
-SELECT
-	*
-FROM
-	SEAT_CALENDAR
-SELECT
-	*
-FROM
-	SEAT;
+-- SELECT
+-- 	*
+-- FROM
+-- 	CALENDAR;
+-- SELECT
+-- 	*
+-- FROM
+-- 	SEAT_CALENDAR
+-- SELECT
+-- 	*
+-- FROM
+-- 	SEAT;
 
 CREATE OR REPLACE FUNCTION GENERATE_SEAT_AND_UPDATE_TOTAL_SEAT_AFTER_INSERT_CALENDAR () RETURNS TRIGGER AS $$
 Declare 
@@ -80,18 +80,18 @@ Return null;
 End ;
 $$ LANGUAGE PLPGSQL;
 
-SELECT
-	*
-FROM
-	FILM
-SELECT
-	*
-FROM
-	THEATER
-INSERT INTO
-	CALENDAR
-VALUES
-	('123', '1119878', NOW(), 0, 0, 'THEATER01')
+-- SELECT
+-- 	*
+-- FROM
+-- 	FILM
+-- SELECT
+-- 	*
+-- FROM
+-- 	THEATER
+-- INSERT INTO
+-- 	CALENDAR
+-- VALUES
+-- 	('123', '1119878', NOW(), 0, 0, 'THEATER01')
 CREATE OR REPLACE TRIGGER GENERATE_SEAT_AFTER_INSERT_CALENDAR_TRG
 AFTER INSERT ON CALENDAR FOR EACH ROW
 EXECUTE FUNCTION GENERATE_SEAT_AND_UPDATE_TOTAL_SEAT_AFTER_INSERT_CALENDAR ();
@@ -110,9 +110,9 @@ CREATE OR REPLACE TRIGGER DELETE_ALL_SEAT_CALENDAR_AFTER_DELETE_CALENDAR_TRG
 AFTER DELETE ON CALENDAR FOR EACH ROW
 EXECUTE FUNCTION DELETE_ALL_SEAT_CALENDAR_AFTER_DELETE_CALENDAR ();
 
-DELETE FROM CALENDAR
-WHERE
-	CALENDAR_ID = '123'
+-- DELETE FROM CALENDAR
+-- WHERE
+-- 	CALENDAR_ID = '123'
 	--
 -- update_seat_calendar_and_calendar_after_insert_booking
 
@@ -142,20 +142,20 @@ $$ language plpgsql;
 create or replace trigger update_seat_calendar_and_calendar_after_insert_booking_trg
 after insert on booking
 for each row
-execute function update_seat_calendar_and_calendar_after_insert_booking()
+execute function update_seat_calendar_and_calendar_after_insert_booking();
 
-select * from seat
-select * from customer
-insert into booking values('4312','123','cus_002',now(),'THEATER01A01','THEATER01','1000000')
+-- select * from seat
+-- select * from customer
+-- insert into booking values('4312','123','cus_002',now(),'THEATER01A01','THEATER01','1000000')
 
--- update_popcorn_after_insert_book_popcorn
-select * from book_popCorn
-select * from popcorn
+-- -- update_popcorn_after_insert_book_popcorn
+-- select * from book_popCorn
+-- select * from popcorn
 
-select * from booking;
-insert into popcorn values('POPCORN01','Coca And Corn',20000,0,0);
-insert into popcorn values('POPCORN02','Sprite And Chocolate Corn',40000,0,0);
-insert into book_popCorn values('POPCORN02','4312',80000,2);
+-- select * from booking;
+-- insert into popcorn values('POPCORN01','Coca And Corn',20000,0,0);
+-- insert into popcorn values('POPCORN02','Sprite And Chocolate Corn',40000,0,0);
+-- insert into book_popCorn values('POPCORN02','4312',80000,2);
 
 create or replace function update_popcorn_after_insert_book_popcorn()
 returns trigger as $$
@@ -177,5 +177,5 @@ after insert on book_popcorn
 for each row 
 execute function update_popcorn_after_insert_book_popcorn();
 
-select * from calendar
-delete from calendar where calendar.calendar_id = '17f6f855-e730-46ad-a2ac-8635ee062629'
+-- select * from calendar;
+-- delete from calendar where calendar.calendar_id = '17f6f855-e730-46ad-a2ac-8635ee062629';

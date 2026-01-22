@@ -9,7 +9,11 @@ import LoginButton from "../LoginButton";
 import Logo from "../../images/Logo-removebg-preview.png";
 
 function NavPublic({ setIsClick }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const rawUser = localStorage.getItem("user");
+  const user =
+    rawUser && rawUser !== "undefined"
+      ? JSON.parse(rawUser)
+      : null;
   return (
     <>
       <nav className="w-full mt-5 bg-black p-7 sticky top-0 left-0 z-20">

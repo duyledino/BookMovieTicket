@@ -18,7 +18,7 @@ import { pool, testPool } from "./utils/configPostgres.js";
 import { WebSocketServer } from "ws";
 import http from "http";
 import {testGetReponseBot} from "./controller/BotController.js"
-import { redisClient, syncPostgresToRedis } from "./controller/SearchController.js";
+// import { redisClient, syncPostgresToRedis } from "./controller/SearchController.js";
 
 env.config();
 
@@ -47,7 +47,7 @@ languageRouter(app);
 theaterRouter(app);
 popCornRouter(app);
 botRouter(app);
-searchRouter(app);
+// searchRouter(app);
 paymentRouter(app);
 
 app.get("/", (req, res) => {
@@ -80,25 +80,25 @@ server.listen(PORT, () => {
 
 testPool();
 
-redisClient.on("error", (err) => console.log("Redis client error", err));
+// redisClient.on("error", (err) => console.log("Redis client error", err));
 
 
 
-redisClient.connect();
-process.on('SIGINT', async () => {
-  console.log('Shutting down...');
-  try {
-    await redisClient.del('autocomplete'); // Delete before disconnecting
-    await redisClient.quit(); // Gracefully close connection
-    console.log('Redis data cleared and connection closed');
-    process.exit(0);
-  } catch (err) {
-    console.error('Error during shutdown:', err);
-    process.exit(1);
-  }
-});
+// redisClient.connect();
+// process.on('SIGINT', async () => {
+//   console.log('Shutting down...');
+//   try {
+//     await redisClient.del('autocomplete'); // Delete before disconnecting
+//     await redisClient.quit(); // Gracefully close connection
+//     console.log('Redis data cleared and connection closed');
+//     process.exit(0);
+//   } catch (err) {
+//     console.error('Error during shutdown:', err);
+//     process.exit(1);
+//   }
+// });
 
 const DayInterval = 1000*60*60*24;
 
-syncPostgresToRedis();
-setInterval(syncPostgresToRedis,DayInterval); // refresh each 1 day
+// syncPostgresToRedis();
+// setInterval(syncPostgresToRedis,DayInterval); // refresh each 1 day

@@ -35,7 +35,7 @@ const MobileNavPublic = ({ isClick, setIsClick }) => {
       navigate("/");
     }
   };
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") == "undefined" ? "null" : localStorage.getItem("user"));
   const { pathname } = useLocation();
   console.log("nav is Click", pathname);
   return (
@@ -62,7 +62,7 @@ const MobileNavPublic = ({ isClick, setIsClick }) => {
         ) : (
           <div className="flex flex-col w-[95%] items-center gap-5">
             <FaCircleUser className="text-7xl text-amber-300 font-extrabold " />
-            <h1 className="text-white text-3xl">{user?.username}</h1>
+            <h1 className="text-white text-3xl">{user?.username ?? ""}</h1>
           </div>
         )}
 

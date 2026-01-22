@@ -48,7 +48,7 @@ function MovieInner() {
       {loading ? <Loading /> : ""}
       <div className="containerOutterFilm w-full max-w-[85%] m-auto">
         <ul className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 list-none">
-          {allFilm.length > 0 &&
+          {allFilm && allFilm.length > 0 &&
             allFilm.map((film) => (
               // <li
               //   className=" shadow-boundary p-3.5  hover:ring-2 ring-amber-300 transition-all relative"

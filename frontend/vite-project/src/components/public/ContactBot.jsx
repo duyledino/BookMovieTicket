@@ -18,32 +18,32 @@ function ContactBot() {
   const [animate, setAnimate] = useState(false);
   const socketRef = useRef(null);
   console.log(chat);
-  useEffect(() => {
-    console.log("in websocket");
-    socketRef.current = new WebSocket(`${import.meta.env.VITE_SOCKET_HOST}`);
-    socketRef.current.onopen = () => {
-      console.log(console.log("✅ WebSocket connected"));
-    };
-    socketRef.current.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data, data.content, data.server, data?.server?.kwargs?.content);
-      setChat((prev) => [
-        ...prev,
-        {
-          role: "bot",
-          text: data?.server?.kwargs?.content
-            ? data?.server?.kwargs?.content
-            : data.server,
-        },
-      ]);
-    };
-    socketRef.current.onclose = () => {
-      console.log("❌ WebSocket disconnected");
-    };
-    return () => {
-      socketRef.current.close();
-    };
-  }, []);
+  // useEffect(() => {
+  //   console.log("in websocket");
+  //   socketRef.current = new WebSocket(`${import.meta.env.VITE_SOCKET_HOST}`);
+  //   socketRef.current.onopen = () => {
+  //     console.log(console.log("✅ WebSocket connected"));
+  //   };
+  //   socketRef.current.onmessage = (event) => {
+  //     const data = JSON.parse(event.data);
+  //     console.log(data, data.content, data.server, data?.server?.kwargs?.content);
+  //     setChat((prev) => [
+  //       ...prev,
+  //       {
+  //         role: "bot",
+  //         text: data?.server?.kwargs?.content
+  //           ? data?.server?.kwargs?.content
+  //           : data.server,
+  //       },
+  //     ]);
+  //   };
+  //   socketRef.current.onclose = () => {
+  //     console.log("❌ WebSocket disconnected");
+  //   };
+  //   return () => {
+  //     socketRef.current.close();
+  //   };
+  // }, []);
   useEffect(() => {
     chatRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);

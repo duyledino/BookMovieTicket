@@ -7,6 +7,7 @@ import { addMoviesInPage } from "../slices/movieSlice.js";
 import AddToStoreButton from "../components/AddToStoreButton.jsx";
 import { addToast } from "../slices/toastSlice.js";
 import Loading from "../components/Loading.jsx";
+import axios from "axios";
 
 function MovieOutter() {
   const [loading, setLoading] = useState(false);
@@ -23,11 +24,13 @@ function MovieOutter() {
     const fetchFilm = async () => {
       setLoading(true);
       try {
-        const res = await fetch(
+        const res = await axios(
           `${
             import.meta.env.VITE_SERVER_URL
           }/FilmOutside/getFilmOutside?page=${page}`,
-          { credentials: "include" }
+          {
+            withCredentials: true
+          }
         );
         if (res.status === 203) {
           setLoading(false);
@@ -35,12 +38,12 @@ function MovieOutter() {
           localStorage.removeItem("user");
           navigate("/404NotFound");
         }
-        const data = await res.json();
-        dispatch(addMoviesInPage(data.listFilm));
+        console.log("respsone: >>>>>",res.data);
+        dispatch(addMoviesInPage(res.data.listFilm));
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        console.error("Failed to fetch film.");
+        console.error("Failed to fetch film.:>>> ",error);
         dispatch(addToast({ message: res.data?.Message, type: "failed" }));
       }
     };

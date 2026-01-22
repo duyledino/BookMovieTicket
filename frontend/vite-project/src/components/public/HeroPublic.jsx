@@ -32,7 +32,7 @@ function HeroPublic() {
       const res = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/film/getLastestFilm`
       );
-      if (res.status === 200) {
+      if (res.status === 200 && res.data != null && res.data.lastestFilms !== null && res.data.lastestFilms!==undefined) {
         setLoading(false);
         setLastestFilm(res.data.latestFilm);
         setSelectedFilm(res.data.latestFilm[current.current].poster_path);
@@ -43,7 +43,7 @@ function HeroPublic() {
   }, []);
   // Auto-slide effect
   useEffect(() => {
-    if (isHover === null && lastestFilms.length > 0 && windowWidth > 1024) {
+    if (isHover === null && lastestFilms && lastestFilms.length > 0 && windowWidth > 1024) {
       intervalID.current = setInterval(() => {
         current.current = (current.current + 1) % lastestFilms.length;
         setSelectedFilm(lastestFilms[current.current].poster_path);
@@ -68,7 +68,7 @@ function HeroPublic() {
     }
   }, [isHover]);
   useEffect(() => {
-    if (windowWidth < 1024) {
+    if (windowWidth < 1024 && lastestFilms !== undefined && lastestFilms !== null) {
       if (current1 === lastestFilms.length) {
         setSelectedFilm(lastestFilms[0]?.poster_path);
         setBackground(lastestFilms[0]?.poster_path);
@@ -111,7 +111,7 @@ function HeroPublic() {
           className="w-full h-full object-cover aspect-video appearAnimation"
         />
         <div className="absolute bottom-0 left-0 w-full lg:flex hidden justify-center">
-          {lastestFilms.length > 0 &&
+          {lastestFilms && lastestFilms.length > 0 &&
             lastestFilms.map((film) => (
               <img
                 onMouseEnter={() => setIsHover(film.film_id)}

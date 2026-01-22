@@ -84,7 +84,7 @@ const MobileNavAdmin = ({ isClick, setIsClick }) => {
         <Link to={`/Profile`} className="flex justify-center items-center">
           <FaCircleUser className="text-amber-300 text-4xl font-extrabold" />
         </Link>
-        <h1 className="text-white text-2xl">{user.username}</h1>
+        <h1 className="text-white text-2xl">{user?.username ?? "Không thấy tên"}</h1>
         <BiDoorOpen
           className="text-4xl text-white font-bold cursor-pointer"
           onClick={handleLogout}

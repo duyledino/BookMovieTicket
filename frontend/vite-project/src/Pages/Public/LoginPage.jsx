@@ -17,6 +17,7 @@ function LoginPage() {
     setLoading(true);
     e.preventDefault();
     axios.defaults.withCredentials = true;
+    console.log("import.meta.env.VITE_SERVER_URL:>>>>",import.meta.env.VITE_SERVER_URL);
     const res = await axios.post(
       `${import.meta.env.VITE_SERVER_URL}/user/login`,
       {

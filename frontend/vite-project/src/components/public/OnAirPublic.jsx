@@ -34,7 +34,7 @@ function OnAirPublic() {
           phim dang Chieu
         </h1>
         <div className="listFilm flex lg:justify-around lg:mx-0 mx-auto overflow-x-hidden lg:w-full md:w-[500px] lg:gap-4 gap-0">
-          {nows.length > 0 &&
+          {nows && nows.length > 0 &&
             nows.map((c) => (
               <MovieBox key={c.film_id} Type={`Book`} film={c} style={innerWidth < 1024 ? { transform: `translateX(-${current * 100}%)` } : undefined} />
             ))}

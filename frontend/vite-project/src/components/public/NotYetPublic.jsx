@@ -32,7 +32,7 @@ function NotYetPublic() {
           phim sap chieu
         </h1>
         <div className="flex overflow-x-hidden lg:mx-0 mx-auto lg:justify-around lg:w-full md:w-[500px] w-full gap-4">
-          {comingSoons.length > 0 &&
+          {comingSoons && comingSoons.length > 0 &&
             comingSoons.map((c, index) => (
               <MovieBox key={index} Type={`FindMore`} film={c} style={innerWidth < 1024 ? { transform: `translateX(-${current * 100}%)` } : undefined}/>
             ))}
